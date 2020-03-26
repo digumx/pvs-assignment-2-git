@@ -1,0 +1,41 @@
+sum_plus  % [ parameters ]
+		: THEORY
+
+  BEGIN
+
+  n: Var nat
+  f, g: VAR [nat -> nat]
+
+  sum(f,n) : RECURSIVE nat =
+    IF n = 0 THEN
+      0
+    ELSE
+      f(n-1) + sum(f, n - 1)
+    ENDIF
+  MEASURE n
+
+  sum_plus : LEMMA
+    sum((lambda n : f(n) + g(n)), n)
+   = sum(f,n) + sum(g,n)
+
+  square(n) : nat = n * n
+
+  sum_of_squares : LEMMA
+    6 * sum(square, n+1) = n * (n+1) * (2*n + 1)
+
+  cube(n) : nat = n * n * n
+
+  sum_of_cubes : LEMMA
+    4 * sum(cube, n+1) = n*n*(n+1)*(n+1)
+
+%A. Induction Warmup with sum
+%1. Construct different inductive proofs for sum_of_squares lemma as per following instructions.  %All your proofs may use the induct command, but other commands need to restricted as described %below.
+%a. A "manual" proof that is limited to using the following commands: rewrite/expand, assert, %prop/flatten, if required.
+
+%b. A more "automated" proof using commands auto-rewrite-defs and assert.  The auto-rewrite-defs %(see PVS prover guide) command installs rewrite rules which can then be used to simplify %expressions using assert.  The rewrite rules installed by auto-rewrite-defs correspond to function %definitions of functions directly used in the lemma or indirectly by the functions appearing in %the lemma. Note: Meta-x (show-auto-rewrites) shows the rewrite rules currently installed.
+
+%c. Replace auto-rewrite-defs in your proof with (auto-rewrite-theory "sum_plus") command, which %installs rewrite rules of all definitions and lemmas appearing in the given theory.  Does your %proof work now?  If not, explain why not.  Hint: check the rewrite rules installed by PVS.
+
+%d. Fix your proof in (c) to make it work.  Hint: you may not need to selectively use %(stop-rewrite) command to control your rewrites.
+
+  END sum_plus
