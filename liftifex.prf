@@ -1,0 +1,26 @@
+(liftifex
+ (iflemma 0
+  (iflemma-liftif-star
+   "Same as with lift-if, used (lift-if *) instead." 3794322071
+   ("" (lift-if *) (("" (ground) nil nil)) nil) nil shostak)
+  (iflemma-liftif "Shortening proof with lift-if" 3794321687
+   ("" (lift-if) (("" (ground) nil nil)) nil) nil shostak)
+  (iflemma-1 nil 3794310900
+   ("" (assert)
+    ((""
+      (case ((z=y AND w=v) OR (z=y AND w/=v AND z=x AND w=u) OR
+             (z=y AND w/=v AND z=x AND w/=u) OR (z=y AND w/=v AND z/=x)
+             OR (z/=y AND z=x) OR (z/=y AND z/=x)))
+      (("1" (split)
+        (("1" (ground) nil nil) ("2" (ground) nil nil)
+         ("3" (ground) nil nil) ("4" (ground) nil nil)
+         ("5" (ground) nil nil) ("6" (ground) nil nil))
+        nil)
+       ("2" (ground) nil nil))
+      nil))
+    nil)
+   nil shostak))
+ (iflemma1 0
+  (iflemma1-1 nil 3794310666 ("" (lift-if) (("" (ground) nil nil)) nil)
+   nil shostak)))
+
