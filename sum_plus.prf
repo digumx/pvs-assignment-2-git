@@ -1,0 +1,74 @@
+(sum_plus
+ (sum_TCC1 0
+  (sum_TCC1-1 nil 3794299011 ("" (subtype-tcc) nil nil) nil nil
+   (sum subtype "(number_fields.-)(sum_plus.n, 1)" "nat")))
+ (sum_TCC2 0
+  (sum_TCC2-1 nil 3794299011 ("" (termination-tcc) nil nil) nil nil
+   (sum termination
+    "sum_plus.sum(sum_plus.f, (number_fields.-)(sum_plus.n, 1))"
+    "nil")))
+ (sum_of_squares 0
+  (sum_of_squares-1 nil 3794299012
+   ("" (induct n)
+    (("1" (rewrite sum)
+      (("1" (rewrite sum)
+        (("1" (rewrite square) (("1" (assert) nil nil)) nil)) nil))
+      nil)
+     ("2" (skolem 1 j0)
+      (("2" (flatten)
+        (("2" (rewrite sum 1)
+          (("2" (assert)
+            (("2" (assert)
+              (("2" (rewrite -1 1)
+                (("2" (expand square) (("2" (assert) nil nil)) nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   ((posint_times_posint_is_posint application-judgement "posint"
+     integers nil)
+    (int_minus_int_is_int application-judgement "int" integers nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil)
+    (even_plus_even_is_even application-judgement "even_int" integers
+     nil)
+    (even_plus_odd_is_odd application-judgement "odd_int" integers nil)
+    (int_times_even_is_even application-judgement "even_int" integers
+     nil)
+    (nnint_times_nnint_is_nnint application-judgement "nonneg_int"
+     integers nil)
+    (even_times_int_is_even application-judgement "even_int" integers
+     nil)
+    (odd_minus_odd_is_even application-judgement "even_int" integers
+     nil)
+    (nnint_plus_nnint_is_nnint application-judgement "nonneg_int"
+     integers nil)
+    (nat_induction formula-decl nil naturalnumbers nil)
+    (+ const-decl "[numfield, numfield -> numfield]" number_fields nil)
+    (square const-decl "nat" sum_plus nil)
+    (sum def-decl "nat" sum_plus nil)
+    (* const-decl "[numfield, numfield -> numfield]" number_fields nil)
+    (numfield nonempty-type-eq-decl nil number_fields nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (pred type-eq-decl nil defined_types nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (>= const-decl "bool" reals nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (number nonempty-type-decl nil numbers nil)
+    (nnint_plus_posint_is_posint application-judgement "posint"
+     integers nil))
+   shostak)))
+
