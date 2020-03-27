@@ -1,0 +1,60 @@
+liftifex  % [ parameters ]
+		: THEORY
+
+  BEGIN
+
+  % ASSUMING
+   % assuming declarations
+  % ENDASSUMING
+
+z,x,y,w,v,u: int
+f: [int -> int]
+
+iflemma: LEMMA
+(IF z = y THEN
+          (IF w = v THEN 5
+           ELSIF z = x THEN (IF w = u THEN 3 ELSE f(z) ENDIF)
+           ELSE f(z)
+           ENDIF)
+ELSIF z = x THEN 3
+ELSE f(z)
+ENDIF)
+=
+IF    (z=y AND w=v) THEN 5
+ELSIF (z=y AND w/=v AND z=x AND w=u) THEN 3
+ELSIF (z=y AND w/=v AND z=x AND w/=u) THEN  f(z)
+ELSIF (z=y AND w/=v AND z/=x) THEN f(z)
+ELSIF (z/=y AND z=x) THEN 3
+ELSE  f(z)
+ENDIF
+
+
+iflemma1: LEMMA
+(IF z = y THEN
+          (IF w = v THEN f(5)
+           ELSIF z = x THEN (IF w = u THEN f(3) ELSE f(f(z)) ENDIF)
+           ELSE f(f(z))
+           ENDIF)
+ELSIF z = x THEN f(3)
+ELSE f(f(z))
+ENDIF)
+=
+f(IF    (z=y AND w=v) THEN 5
+ELSIF (z=y AND w/=v AND z=x AND w=u) THEN 3
+ELSIF (z=y AND w/=v AND z=x AND w/=u) THEN  f(z)
+ELSIF (z=y AND w/=v AND z/=x) THEN f(z)
+ELSIF (z/=y AND z=x) THEN 3
+ELSE  f(z)
+ENDIF
+)
+
+%B. Warm-up with lift-if
+%1. Your goal is to construct a proof for the valid iflemma1 as per requirements below after %answering some questions I have posed.
+%a. Try (assert) on it.  Why doesn't it prove the lemma?
+%b. Try (split) or (prop) or (ground) on it.  Why don't either of them have any change on the %sequent?
+%c. Construct a "manual" proof it by doing a series of (case "bool-exp") splits.  Try to minimize %the number of case-splits in your proof.
+%d. The (lift-if) command provides you way getting PVS to automatically figure out the case-splits %needed.  Read up on PVS Prover guide information about the lift-if command.
+%e. Study what (lift-if) does; try (lift-if *); What effect does it have on the sequent?
+%f. Now construct a proof for iflemma1 without using any explicit case splits, but using lift-if.  %try to get the shortest proof with lift-if.  Try to understand why and how your proof works.  
+
+  END liftifex
