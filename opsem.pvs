@@ -1,0 +1,80 @@
+opsem  % [ parameters ]
+		: THEORY
+
+  BEGIN
+
+  % ASSUMING
+   % assuming declarations
+  % ENDASSUMING
+
+  aexpt: DATATYPE
+  BEGIN
+   ANum(numb:nat): ANum?
+   APlus(left: aexpt, right: aexpt): APlus?
+   AMinus (left: aexpt, right: aexpt): AMinus?
+   AMult (left: aexpt, right: aexpt): AMult?
+  END aexpt
+
+  bexpt: DATATYPE
+  BEGIN
+   BTrue: BTrue?
+   BFalse: BFalse?
+   BEq(left: aexpt, right: aexpt): BEq?
+   BLe(left: aexpt, right: aexpt): BLe?
+   BNot(exp: bexpt): BNot?
+   BAnd(left: bexpt, right: bexpt): BAnd?
+  END bexpt
+
+  aexp, aexp1, aexp2: VAR aexpt
+  bexp, bexp1, bexp2: VAR bexpt
+
+  Minus(a,b: nat): nat = (IF a<b THEN 0 ELSE a-b ENDIF)
+  
+  aeval(aexp): RECURSIVE nat =
+    (CASES aexp OF
+      ANum(n): n,
+      APlus(a1, a2): aeval(a1) + aeval(a2),
+      AMinus(a1, a2): Minus(aeval(a1),  aeval(a2)),
+      AMult(a1, a2): aeval(a1) * aeval(a2)
+      ENDCASES)
+   MEASURE aexp BY <<
+
+   n: VAR nat
+   aexpexec: LEMMA aeval(AMult(AMinus(ANum(0), ANum(1)), APlus(ANum(1), ANum(1)))) = n
+
+  beval(bexp): RECURSIVE bool =
+    (CASES bexp OF
+      BTrue: true,
+      BFalse: false,
+      BEq(a1, a2): aeval(a1) = aeval(a2),
+      BLe(a1, a2): aeval(a1) <= aeval(a2),
+      BNot(b): NOT beval(b),
+      BAnd(b1, b2): beval(b1) AND beval(b2)
+      ENDCASES)
+   MEASURE bexp BY <<
+
+    Optimize (a: aexpt): RECURSIVE aexpt =
+       (CASES a OF
+        ANum(n) : ANum(n),
+%	APlus(ANum(n), e2): IF n=0 THEN test(e2) ELSE APlus(ANum(n), test(e2)) ENDIF,
+	APlus(e1, e2): (CASES e1 OF
+	                ANum(n): IF n=0 THEN Optimize(e2) ELSE APlus(ANum(n), Optimize(e2)) ENDIF
+			ELSE APlus(Optimize(e1), Optimize(e2))
+			ENDCASES),
+	AMinus(e1,e2): AMinus(Optimize(e1), Optimize(e2)),
+        AMult(e1, e2): AMult(Optimize(e1), Optimize(e2))
+	ENDCASES)
+       MEASURE a BY <<
+
+    optprop : THEOREM 
+        (FORALL (a: aexpt): aeval(Optimize(a)) = aeval(a))
+
+%C. Proofs on Evaluation semantics of expressions: Part-1
+%This file models in PVS the operational semantics of arithmetic and boolean expressions which are %part of of a tiny imperative PL presented in class for Hoare Logic.  It defines along lines very %similar to what Prof. Suresh illustrated in class for CoQ.  It defines aexpt and bexpt as %inductive data types and then defines evaluation functions for them as aeval and beval.  This part %of the exercize is meant for you to review the PVS file and the proofs in them in preparation for %the next exercise.  Specifically, you are to perform the following tasks.
+
+%1. Review the lemma aexpexec, which is defined manly to test the aeval function by simulating it on desired input expressions.  Review its proof, which illustrates how auto-rewrites feature of PVS can be used for this purpose.  Step through the proof on a few expressions to see auto-rewriting in works.
+
+%2. The lemma optprop asserts the soundness (equivalence) of optimized and origina expressions.  I have given three inductive proofs for proving this lemma ranging from a manual one to more automated ones.  Review the proofs by rerunning them using Meta-x x-step-proof command.  Review how lift-if, asserts are used to automate the proofs to a significanyt extent.  The shorter proofd illustarte the use of smash and tactical commands (try, then, and apply) of PVS.
+
+%3: Review the unproved termination TCC generated.  Can you prove it?
+  End opsem
