@@ -1,0 +1,76 @@
+opsemwithstates  % [ parameters ]
+		: THEORY
+
+  BEGIN
+
+  % ASSUMING
+   % assuming declarations
+  % ENDASSUMING
+
+     vars: TYPE = {W, X, Y, Z}
+     v: VAR vars
+     
+     statet : TYPE = ARRAY[vars -> nat]
+
+     istatet : TYPE = {s: statet | (FORALL (v: vars): s(v) = 0) }
+
+     s0, s1, s2: istatet
+     st, s, t, q, r: VAR istatet
+
+     init_state : LEMMA s(v) = 0
+     
+     test0: LEMMA (s0 WITH [(W) := 1, (W) := 2])(W) = 2
+     test1: LEMMA (s0 WITH [(W) := s0(W)])(W) = 0
+     test2: LEMMA (s WITH [(W) := s(W)])(W) = 0
+     test3: LEMMA (s WITH [(W) := s(W)]) = s
+
+  aexpt: DATATYPE
+  BEGIN
+   AConst(const:nat): AConst?
+   AVar(v:vars): AVar?
+   APlus(left:aexpt, right:aexpt): APlus?
+   AMinus(left:aexpt, right:aexpt): AMinus?
+   AMult(left:aexpt, right:aexpt): AMult?
+  END aexpt
+
+  bexpt: DATATYPE
+  BEGIN
+   BTrue: BTrue?
+   BFalse: BFalse?
+   BE
+  END bexpt
+
+  aexp, aexp1, aexp2: VAR aexpt
+  bexp, bexp1, bexp2: VAR bexpt
+
+  aeval(st, aexp): RECURSIVE nat =
+  .....
+   MEASURE ....
+
+   n: VAR nat
+   aexpexec: LEMMA aeval(st, APlus(ANum(0), ANum(1))) = n
+
+  beval(st: istatet, bexp): RECURSIVE bool =
+    .....
+   MEASURE .....
+
+
+Evalaexp1 : LEMMA 
+    aeval(st WITH [X := 5],  APlus(ANum(3), AMult(AId(X), ANum(2))) ) %(3 + (X * 2))
+              = 13
+
+Evalbexp1 : LEMMA beval(st WITH [X := 5], BAnd(BTrue, BNot(BLe(AId(X), ANum(4)))) ) % (true && ~(X ≤ 4))%imp
+                       = true
+
+
+    Opt (st:istatet, a: aexpt): RECURSIVE aexpt =
+      .......
+       MEASURE .....
+
+    Opt_sound : THEOREM 
+        (FORALL (st:istatet): (FORALL (a: aexpt): .... ))
+
+ %C. Proofs on Evaluation semantics of expressions: Part-1
+%This file gives a template for modeling in PVS the operational semantics of arithmetic and boolean %expressions for the tiny language in the presence of states.  A state is modeled using the ARRAY %(function) data type of PVS and a definition for it and its suage has been provided in the file.  %For more details consult the PVS Language manual.  You are expected to fill the "...." parts in %the file to complete the definition of evaluation semantics and prove the soundness property %(after defining it) analogous to what is shown in opsem.pvs.  Make sure you discharge all tccs in %addition to proving the required theorems.
+     
+  END opsemwithstates
