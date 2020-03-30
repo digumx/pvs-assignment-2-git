@@ -26,7 +26,9 @@ sequent to the internal efficient data structure of true assumption maintained b
 uses `(simplify)` to simplify the formulae in the sequent, which can only remove one level of `IF` if it is able to 
 resolve the condition to `TRUE`, `FALSE`, or if the condition is already recorded. In the current case no such 
 simplifications are possible, and a case split is necessary, and thus `(simplify)` fails to simplify the formulae, and
-`(record)` fails to record them. This is why `(assert)` fails.
+`(record)` fails to record them. Essencially, assert can simplify propositional expressions only if no case splitting
+is necessary because one or more of the predicates can be simplified to truth values. This does not happens in this case,
+and so `(assert)` fails.
 
 ### Part b:
 
@@ -52,7 +54,7 @@ all the conditions. The negation term in above was computed by hand. This produc
 
 ### Part d:
 
-We note that expressions of the form `F(IF A THEN B ELSE C) can be transformed so that the top level connective is `IF` by
+We note that expressions of the form `F(IF A THEN B ELSE C)` can be transformed so that the top level connective is `IF` by
 "lifting" the `IF`, transforming the expression to `IF A THEN F(B) ELSE F(C)`. The `(lift-if)` command looks at all the 
 leftmost `IF` connectives in a formula and selects the innermost one to apply the lifting transformation to it.
 
@@ -101,3 +103,51 @@ the left of the `=` above the `=`, transforming the formula in a manner very sim
 proving `iflemma`. Similar to the previous case, the decision condition expressions for the `IF` in the right hand are substituted
 according to which branch the instance of the right hand expression belongs. Applying `(ground)` on the transformed formula
 completes the proof, as before. This proof is saved as `iflemma1-1`.
+
+## Problem C.1:
+### Part 1:
+
+The `(auto-rewrite-defs)` installs rewrite rules automatically for the definitions of the structural ordering for `aexpt` and
+`bexpt`, which comes from an expanded definition defining when an instance of these expression types is structurally smaller
+than another. It also installs rewrite rules for the definitions of the functions `aeval` and `Minus`. Additionally, several 
+rewrite rules for definitions relevant to proving well-foundedness and totally-orderedness of the order used in the measure
+function are also installed. Once the following `(skosimp*)` command reduces the sequent to a form with no quantifiers or 
+implications in the goal, the installed rewrite rules are available to `(assert)` which can then use them to automatically
+simplify and evaluate the left hand side of the lemma. Even if the form of the arguement to `aeval` is changed, the proof
+need not be changed, as the `assert` command automatically evaluates the left hand side regardless of it's form.
+
+### Part 2:
+
+For the `optprop-1` proof, the proof begins by installing auto rewrites corresponding to all cases of the recursive datatypes
+and functions with `(auto-rewrite-defs)` and begins an induction on `a`, which is an instance of the inductive datatype `aexpt`. 
+This produces 4 subgoals, one for base `ANum` case, and 3 for the other 3 inductive cases. For the first subgoal, `(skosimp*)` 
+removes quantifiers and `(assert)` uses auto rewrites to automatically simplify and prove the goal. `(skosimp*)` is used on
+the `APlus` case to remove quantifiers, `(assert)` to rewrite using definitions of `Optimize` and `aeval` and then `(lift-if)`
+is used to lift the if above the equality so that it is the topmost connective. Then the resulting goal is of the correct form
+so that `(assert)` may be used to prove it using the desicion procedures for arithmatic simplification and by rewriting it 
+using the available definitions. For the other two cases, the same strategy as the one used in the firs case works, that is, 
+using `(skosimp*)` to remove quantifires and implications in the goal, followed by proving the goal using rewrites and 
+simplification via the `(assert)` command.
+
+For the `optprop-2` proof, we start as before by installing rewrite rules for necessary definitions via `(auto-rewrite-defs)`
+and beginning an induction on `a`, splitting into 4 goals as before. Then, for each goal, we use `(skosimp*)` to remove 
+quantifiers and implications, and then apply `(smash)` on it. While `(assert)` can only rewrite based on installed rules and
+perform arithmatic simplifications and propositional simplifications when the arguements to the conditionals can be resolved 
+to `TRUE` or `FALSE`, `(smash)` repeatedly applies `(bddsimp)` to perform more sophisticated propositional simplification, 
+`(lift-if)` to reduce a formula in an equational form to a propositional form, and `(assert)` to perform arithmatic simplification
+and rewrites to simplify predicates to truth values. Since in the original proof we saw that a combination of `(assert)` and
+`(lift-if)` was sufficient to complete the proof for each of the cases, `(smash)` completes the proof in each case.
+
+We notice in the previous proof that the same commands are being applied in each subgoal generated by the induction. The proof
+`optprop-2` uses the strategies `try` and `then` to automate this process. `(try (step1) (step2) (step3))` attempts `(step1)`,
+and if it produces more subgoals, applies `(step2)` on the generated subgoals, else if it fails or acts like `(skip)` and
+produces no further subgoals, it applies `(step3)` to the original goal. `(then (step1) (step2) ...)` simply applies `(step1)`
+to the first goal, then applies `(step2)` to all resulting subgoals and so on. Note that if `(step1)` fails, there is only one
+resulting subgoal, which is the original subgoal. Thus, `(step2)` will then act on the original subgoal. The proof uses
+`(try (induct "a") (then (skosimp*) (smash)) (skip))`, where the outer `try` attempts induction on `a`, failing which `(skip)`
+is called. In this case however, the induction succeeds and `(then (skosimp*) (smash))` is applied to each subgoal generated,
+which simply invokes `(skosimp*)` followed by `(smash)` on each subgoal as seen in the previous proof, completing the proof.
+
+### Part 3:
+
+There were no unproved TCCs.
