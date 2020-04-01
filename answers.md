@@ -150,4 +150,6 @@ which simply invokes `(skosimp*)` followed by `(smash)` on each subgoal as seen 
 
 ### Part 3:
 
-There were no unproved TCCs.
+The manual proofs for the TCCs are saved as `<TCC_name>-manual`, where `<TCC_name>` represents the name of the TCC as it appers
+in the output of `M-x show-tccs`. For all the TCCs, after installing rewrites, skolemizing and flattening, rewriting with the 
+equality in the hypothesis and applying `(assert)` completes the proof.

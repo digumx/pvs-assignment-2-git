@@ -1,23 +1,93 @@
 (opsem
  (Minus_TCC1 0
-  (Minus_TCC1-1 nil 3793874117 ("" (subtype-tcc) nil nil) nil nil))
+  (Minus_TCC1-manual "A more manual proofs" 3794742029
+   ("" (skosimp*) (("" (assert) nil nil)) nil) nil shostak
+   (Minus subtype "(number_fields.-)(opsem.a, opsem.b)" "nat"))
+  (Minus_TCC1-1 nil 3793874117 ("" (subtype-tcc) nil nil)
+   ((real_lt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (int_minus_int_is_int application-judgement "int" integers nil))
+   nil (Minus subtype "(number_fields.-)(opsem.a, opsem.b)" "nat")))
  (aeval_TCC1 0
+  (aeval_TCC1-manual "A more manual proof" 3794743924
+   ("" (auto-rewrite-defs)
+    (("" (skosimp*)
+      (("" (assert)
+        (("" (bddsimp)
+          (("" (rewrite -1 *) (("" (assert) nil nil)) nil)) nil))
+        nil))
+      nil))
+    nil)
+   nil shostak (aeval termination "opsem.aeval(opsem.a1)" "nil"))
   (aeval_TCC1-1 nil 3792910034 ("" (termination-tcc) nil nil)
-   ((<< adt-def-decl "(strict_well_founded?[aexpt])" opsem nil)) nil))
+   ((<< adt-def-decl "(strict_well_founded?[aexpt])" opsem nil)) nil
+   (aeval termination "opsem.aeval(opsem.a1)" "nil")))
  (aeval_TCC2 0
+  (aeval_TCC2-manual "A more manual proof." 3794744031
+   ("" (auto-rewrite-defs)
+    (("" (skosimp*)
+      (("" (assert)
+        (("" (bddsimp)
+          (("" (rewrite -1 *) (("" (assert) nil nil)) nil)) nil))
+        nil))
+      nil))
+    nil)
+   nil shostak (aeval termination "opsem.aeval(opsem.a2)" "nil"))
   (aeval_TCC2-1 nil 3792910034 ("" (termination-tcc) nil nil)
-   ((<< adt-def-decl "(strict_well_founded?[aexpt])" opsem nil)) nil))
+   ((<< adt-def-decl "(strict_well_founded?[aexpt])" opsem nil)) nil
+   (aeval termination "opsem.aeval(opsem.a2)" "nil")))
  (aeval_TCC3 0
+  (aeval_TCC3-manual "A more manual proof" 3794744087
+   ("" (auto-rewrite-defs)
+    (("" (skosimp*)
+      (("" (assert)
+        (("" (bddsimp)
+          (("" (rewrite -1 *) (("" (assert) nil nil)) nil)) nil))
+        nil))
+      nil))
+    nil)
+   nil shostak (aeval termination "opsem.aeval(opsem.a1)" "nil"))
   (aeval_TCC3-1 nil 3792910034 ("" (termination-tcc) nil nil)
-   ((<< adt-def-decl "(strict_well_founded?[aexpt])" opsem nil)) nil))
+   ((<< adt-def-decl "(strict_well_founded?[aexpt])" opsem nil)) nil
+   (aeval termination "opsem.aeval(opsem.a1)" "nil")))
  (aeval_TCC4 0
+  (aeval_TCC4-manual "A more manual proof" 3794744152
+   ("" (auto-rewrite-defs)
+    (("" (skosimp*)
+      (("" (assert) (("" (rewrite -1 *) (("" (assert) nil nil)) nil))
+        nil))
+      nil))
+    nil)
+   nil shostak (aeval termination "opsem.aeval(opsem.a2)" "nil"))
   (aeval_TCC4-1 nil 3792910034 ("" (termination-tcc) nil nil)
-   ((<< adt-def-decl "(strict_well_founded?[aexpt])" opsem nil)) nil))
+   ((<< adt-def-decl "(strict_well_founded?[aexpt])" opsem nil)) nil
+   (aeval termination "opsem.aeval(opsem.a2)" "nil")))
  (aeval_TCC5 0
-  (aeval_TCC5-1 nil 3792910034 ("" (subtype-tcc) nil nil) nil nil))
+  (aeval_TCC5-manual "A more manual proof" 3794744293
+   ("" (auto-rewrite-defs)
+    (("" (skosimp*)
+      (("" (assert)
+        (("" (bddsimp)
+          (("" (rewrite -1 *) (("" (assert) nil nil)) nil)) nil))
+        nil))
+      nil))
+    nil)
+   nil shostak (aeval termination "opsem.aeval(opsem.a1)" "nil"))
+  (aeval_TCC5-1 nil 3792910034 ("" (subtype-tcc) nil nil)
+   ((<< adt-def-decl "(strict_well_founded?[aexpt])" opsem nil)) nil
+   (aeval termination "opsem.aeval(opsem.a1)" "nil")))
  (aeval_TCC6 0
+  (aeval_TCC6-manual "A more manual proof" 3794744697
+   ("" (auto-rewrite-defs)
+    (("" (skosimp*) (("" (rewrite -1 *) (("" (assert) nil nil)) nil))
+      nil))
+    nil)
+   nil shostak (aeval termination "opsem.aeval(opsem.a2)" "nil"))
   (aeval_TCC6-1 nil 3792910034 ("" (termination-tcc) nil nil)
-   ((<< adt-def-decl "(strict_well_founded?[aexpt])" opsem nil)) nil))
+   ((<< adt-def-decl "(strict_well_founded?[aexpt])" opsem nil)) nil
+   (aeval termination "opsem.aeval(opsem.a2)" "nil")))
  (aexpexec 0
   (aexpexec-1 nil 3792934674
    ("" (auto-rewrite-defs)
@@ -25,38 +95,42 @@
     nil)
    nil shostak))
  (beval_TCC1 0
+  (beval_TCC1-manual "A more manual proof" 3794745096
+   ("" (auto-rewrite-defs)
+    (("" (skosimp*) (("" (rewrite -1 1) (("" (assert) nil nil)) nil))
+      nil))
+    nil)
+   nil shostak (beval termination "opsem.beval(opsem.b)" "nil"))
+  (beval_TCC1-manual "A more manual proof" 3794744767
+   ("" (auto-rewrite-defs)
+    (("" (skosimp*) (("" (rewrite -1 *) (("" (assert) nil nil)) nil))
+      nil))
+    nil)
+   ((<< adt-def-decl "(strict_well_founded?[bexpt])" opsem nil))
+   shostak (beval termination "opsem.beval(opsem.b)" "nil"))
   (beval_TCC1-1 nil 3792910034 ("" (termination-tcc) nil nil)
-   ((<< adt-def-decl "(strict_well_founded?[bexpt])" opsem nil)) nil))
+   ((<< adt-def-decl "(strict_well_founded?[bexpt])" opsem nil)) nil
+   (beval termination "opsem.beval(opsem.b)" "nil")))
  (beval_TCC2 0
+  (beval_TCC2-manual "A more manual proof" 3794745156
+   ("" (auto-rewrite-defs)
+    (("" (skosimp*) (("" (rewrite -1 *) (("" (assert) nil nil)) nil))
+      nil))
+    nil)
+   nil shostak (beval termination "opsem.beval(opsem.b1)" "nil"))
   (beval_TCC2-1 nil 3792910034 ("" (termination-tcc) nil nil)
-   ((<< adt-def-decl "(strict_well_founded?[bexpt])" opsem nil)) nil))
+   ((<< adt-def-decl "(strict_well_founded?[bexpt])" opsem nil)) nil
+   (beval termination "opsem.beval(opsem.b1)" "nil")))
  (beval_TCC3 0
+  (beval_TCC3-manual "A more manual proof" 3794745309
+   ("" (auto-rewrite-defs)
+    (("" (skosimp*) (("" (rewrite -2 *) (("" (assert) nil nil)) nil))
+      nil))
+    nil)
+   nil shostak (beval termination "opsem.beval(opsem.b2)" "nil"))
   (beval_TCC3-1 nil 3792910034 ("" (termination-tcc) nil nil)
-   ((<< adt-def-decl "(strict_well_founded?[bexpt])" opsem nil)) nil))
- (Optimize_TCC1 0
-  (Optimize_TCC1-1 nil 3793874172 ("" (termination-tcc) nil nil) nil
-   nil))
- (Optimize_TCC2 0
-  (Optimize_TCC2-1 nil 3793874172 ("" (termination-tcc) nil nil) nil
-   nil))
- (Optimize_TCC3 0
-  (Optimize_TCC3-1 nil 3793874172 ("" (termination-tcc) nil nil) nil
-   nil))
- (Optimize_TCC4 0
-  (Optimize_TCC4-1 nil 3793874172 ("" (termination-tcc) nil nil) nil
-   nil))
- (Optimize_TCC5 0
-  (Optimize_TCC5-1 nil 3793875870 ("" (termination-tcc) nil nil) nil
-   nil))
- (Optimize_TCC6 0
-  (Optimize_TCC6-1 nil 3793875870 ("" (termination-tcc) nil nil) nil
-   nil))
- (Optimize_TCC7 0
-  (Optimize_TCC7-1 nil 3793875870 ("" (termination-tcc) nil nil) nil
-   nil))
- (Optimize_TCC8 0
-  (Optimize_TCC8-1 nil 3793875870 ("" (termination-tcc) nil nil) nil
-   nil))
+   ((<< adt-def-decl "(strict_well_founded?[bexpt])" opsem nil)) nil
+   (beval termination "opsem.beval(opsem.b2)" "nil")))
  (optprop 0
   (optprop-3 "apply strategy as black box" 3793876089
    ("" (auto-rewrite-defs)
