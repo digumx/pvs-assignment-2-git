@@ -1,0 +1,122 @@
+opsemwithstates  % [ parameters ]
+		: THEORY
+
+  BEGIN
+
+  % ASSUMING
+   % assuming declarations
+  % ENDASSUMING
+
+     vars: TYPE = {W, X, Y, Z}
+     v: VAR vars
+     
+     statet : TYPE = ARRAY[vars -> nat]
+
+     istatet : TYPE = {s: statet | (FORALL (v: vars): s(v) = 0) }
+
+     s0, s1, s2: istatet
+     st, s, t, q, r: VAR statet
+
+     init_state : LEMMA s0(v) = 0
+     
+     test0: LEMMA (s0 WITH [(W) := 1, (W) := 2])(W) = 2
+     test1: LEMMA (s0 WITH [(W) := s0(W)])(W) = 0
+     test2: LEMMA (s0 WITH [(W) := s0(W)])(W) = 0
+     test3: LEMMA (s0 WITH [(W) := s0(W)]) = s0
+
+  aexpt: DATATYPE
+  BEGIN
+   AConst(const:nat): AConst?
+   AVar(v:vars): AVar?
+   APlus(left:aexpt, right:aexpt): APlus?
+   AMinus(left:aexpt, right:aexpt): AMinus?
+   AMult(left:aexpt, right:aexpt): AMult?
+  END aexpt
+
+  bexpt: DATATYPE
+  BEGIN
+   BTrue: BTrue?
+   BFalse: BFalse?
+   BEq(left: aexpt, right: aexpt): BEq?
+   BLe(left: aexpt, right: aexpt): BLe?
+   BGt(left: aexpt, right: aexpt): BGt?
+   BNot(exp: bexpt): BNot?
+   BAnd(left: bexpt, right: bexpt): BAnd?
+   BOr(left: bexpt, right: bexpt): BOr?
+  END bexpt
+
+  aexp, aexp1, aexp2: VAR aexpt
+  bexp, bexp1, bexp2: VAR bexpt
+  
+  Minus(a, b: nat): nat = (IF a<b THEN 0 ELSE a-b ENDIF)
+
+  aeval(st, aexp): RECURSIVE nat =
+   (CASES aexp OF
+     AConst(n): n,
+     AVar(v): st(v),
+     APlus(l, r): aeval(st, l) + aeval(st, r),
+     AMinus(l, r): Minus(aeval(st, l), aeval(st, r)),
+     AMult(l, r): aeval(st, l) * aeval(st, r)
+    ENDCASES)
+   MEASURE aexp by <<
+
+   n: VAR nat
+   aexpexec: LEMMA aeval(st, APlus(AConst(0), AConst(1))) = n
+
+  beval(st, bexp): RECURSIVE bool =
+    (CASES bexp OF
+      BTrue: true,
+      BFalse: false,
+      BEq(a1, a2): aeval(st, a1) = aeval(st, a2),
+      BLe(a1, a2): aeval(st, a1) < aeval(st, a2),
+      BGt(a1, a2): aeval(st, a1) > aeval(st, a2),
+      BNot(exp): NOT beval(st, exp),
+      BAnd(l, r): beval(st, l) AND beval(st, r),
+      BOr(l, r): beval(st, l) AND beval(st, r)
+     ENDCASES)
+   MEASURE bexp BY <<
+
+
+Evalaexp1 : LEMMA 
+    aeval(st WITH [X := 5],  APlus(AConst(3), AMult(AVar(X), AConst(2))) ) %(3 + (X * 2))
+              = 13
+
+Evalbexp1 : LEMMA beval(st WITH [X := 5], BAnd(BTrue, BNot(BLe(AVar(X), AConst(4)))) ) % (true && ~(X ≤ 4))%imp
+                       = true
+
+
+    Opt (st, aexp): RECURSIVE aexpt =
+     (CASES aexp OF
+       AConst(n): AConst(n),
+       AVar(v): AVar(v),
+       APlus(l, r): (CASES l1 OF
+                      AConst(n): IF n=0 THEN r1 ELSE APlus(l1, r1) ENDIF,
+		      AVar(v): IF st(v)=0 THEN r1 ELSE APlus(l1, r1) ENDIF
+		      ELSE (CASES r1 OF
+		             AConst(n): IF n=0 THEN l1 ELSE APlus(l1, r1) ENDIF,
+			     AVar(v): IF st(v)=0 THEN l1 ELSE APlus(l1, r1) ENDIF
+			     ELSE APlus(l1, r1) ENDCASES) ENDCASES WHERE l1 = Opt(st, l), r1 = Opt(st, r)),
+       AMinus(l, r): (CASES l1 OF
+                      AConst(n): IF n=0 THEN AConst(0) ELSE AMinus(l1, r1) ENDIF,
+		      AVar(v): IF st(v)=0 THEN AConst(0) ELSE AMinus(l1, r1) ENDIF
+		      ELSE (CASES r1 OF
+		             AConst(n): IF n=0 THEN l1 ELSE AMinus(l1, r1) ENDIF,
+			     AVar(v): IF st(v)=0 THEN l1 ELSE AMinus(l1, r1) ENDIF
+			     ELSE AMinus(l1, r1) ENDCASES) ENDCASES WHERE l1 = Opt(st, l), r1 = Opt(st, r)),
+       AMult(l, r): (CASES l1 OF
+                      AConst(n): IF n=0 THEN AConst(0) ELSIF n=1 THEN r1 ELSE AMult(l1, r1) ENDIF,
+		      AVar(v): IF n=0 THEN AConst(0) ELSIF n=1 THEN r1 ELSE AMult(l1, r1) ENDIF WHERE n = st(v)
+		      ELSE (CASES r1 OF
+		             AConst(m):  IF m=0 THEN AConst(0) ELSIF m=1 THEN l1 ELSE AMult(l1, r1) ENDIF,
+			     AVar(v):  IF m=0 THEN AConst(0) ELSIF m=1 THEN l1 ELSE AMult(l1, r1) ENDIF WHERE m = st(v)
+			     ELSE APlus(l1, r1) ENDCASES) ENDCASES WHERE l1 = Opt(st, l), r1 = Opt(st, r))
+      ENDCASES) 
+     MEASURE aexp BY <<
+
+    Opt_sound : THEOREM 
+        (FORALL (st: statet): (FORALL (a: aexpt): aeval(st, Opt(st, a)) = aeval(st, a)))
+
+ %C. Proofs on Evaluation semantics of expressions: Part-1
+%This file gives a template for modeling in PVS the operational semantics of arithmetic and boolean %expressions for the tiny language in the presence of states.  A state is modeled using the ARRAY %(function) data type of PVS and a definition for it and its suage has been provided in the file.  %For more details consult the PVS Language manual.  You are expected to fill the "...." parts in %the file to complete the definition of evaluation semantics and prove the soundness property %(after defining it) analogous to what is shown in opsem.pvs.  Make sure you discharge all tccs in %addition to proving the required theorems.
+     
+  END opsemwithstates

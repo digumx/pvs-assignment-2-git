@@ -153,3 +153,31 @@ which simply invokes `(skosimp*)` followed by `(smash)` on each subgoal as seen 
 The manual proofs for the TCCs are saved as `<TCC_name>-manual`, where `<TCC_name>` represents the name of the TCC as it appers
 in the output of `M-x show-tccs`. For all the TCCs, after installing rewrites, skolemizing and flattening, rewriting with the 
 equality in the hypothesis and applying `(assert)` completes the proof.
+
+## Problem C.2:
+
+The required completions were made in `opsemwithstates4class.pvs`. For the datatype `aexpt`, expressions `AConst(n)` represent
+a constant `nat` and `AVar(v)` represent reading a variable `v`, the other constructors have the exact same meaning as in 
+`opsem.pvs`. For `bexpt`, additional constructors representing the comparision `<` and the connective `OR` were added. The `aeval`
+and `beval` functions recursively evaluate arithmatic and boolean expressions by performing substitutions from a given state. The
+function `Opt` optimizes expressions recursively by first optimising each of the left and right subexpressions and then reducing
+the resulting expression using the following identities:
+
+```
+FORALL x: aexpt
+    0 + x = x
+    x + 0 = x
+    0 - x = 0
+    x - 0 = l
+    0 * x = 0
+    x * 0 = 0
+    1 * x = l
+    x * 1 = x
+```
+
+The theorem `Opt_sound` states that `Opt` is sound, that is, optimizing any arithmatic expression with respect to any state and
+then evaluating it with respect to the same state produces the same value as directly evaluating the expression with respect to
+the state.
+
+All TCCs generated are manually proved and the proofs are saved under PVS's default names `<tcc_name>-1`, where `<tcc_name>`
+represents the name of the TCC generated.
