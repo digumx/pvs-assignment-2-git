@@ -1,0 +1,17 @@
+majority % [ parameters ]
+       : THEORY
+
+  BEGIN
+
+  % ASSUMING
+   % assuming declarations
+  % ENDASSUMING
+
+  Candidate : TYPE := {A, B, C, D, E}
+
+  VoteSequence : DATATYPE :=
+  BEGIN
+    Null: Null?
+    Vote(
+
+  END majority

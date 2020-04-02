@@ -181,3 +181,14 @@ the state.
 
 All TCCs generated are manually proved and the proofs are saved under PVS's default names `<tcc_name>-1`, where `<tcc_name>`
 represents the name of the TCC generated.
+
+## Problem D.1:
+### Part a:
+
+The specification for the majority problem is given in `majority.pvs`.
+
+Firstly, we define a type `Candidate` to represent a candidate, which in this case can be one of the five candidates `A` to `E`.
+Note that throughout the specification, we do not use the fact that there are five candidates, or which candidates there are
+specifically, and so the candidates can be renamed, added or removed and the specification and it's proofs should remain valid,
+provided there is atleast one candidate.
+
