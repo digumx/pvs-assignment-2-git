@@ -6,7 +6,7 @@ opsemwithstates  % [ parameters ]
   % ASSUMING
    % assuming declarations
   % ENDASSUMING
-
+     
      vars: TYPE = {W, X, Y, Z}
      v: VAR vars
      
