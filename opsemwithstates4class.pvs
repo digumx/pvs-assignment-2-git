@@ -48,7 +48,7 @@ opsemwithstates  % [ parameters ]
   aexp, aexp1, aexp2: VAR aexpt
   bexp, bexp1, bexp2: VAR bexpt
   
-  Minus(a, b: nat): nat = (IF a<b THEN 0 ELSE a-b ENDIF)
+  Minus(a, b: nat): nat = (IF a<=b THEN 0 ELSE a-b ENDIF)
 
   aeval(st, aexp): RECURSIVE nat =
    (CASES aexp OF
@@ -84,6 +84,8 @@ Evalaexp1 : LEMMA
 Evalbexp1 : LEMMA beval(st WITH [X := 5], BAnd(BTrue, BNot(BLe(AVar(X), AConst(4)))) ) % (true && ~(X ≤ 4))%imp
                        = true
 
+    Minus_0: LEMMA FORALL (n: nat): Minus(0, n) = 0
+    Minus_from_0: LEMMA FORALL (n: nat): Minus(n, 0) = n
 
     Opt (st, aexp): RECURSIVE aexpt =
      (CASES aexp OF
@@ -109,7 +111,7 @@ Evalbexp1 : LEMMA beval(st WITH [X := 5], BAnd(BTrue, BNot(BLe(AVar(X), AConst(4
 		      ELSE (CASES r1 OF
 		             AConst(m):  IF m=0 THEN AConst(0) ELSIF m=1 THEN l1 ELSE AMult(l1, r1) ENDIF,
 			     AVar(v):  IF m=0 THEN AConst(0) ELSIF m=1 THEN l1 ELSE AMult(l1, r1) ENDIF WHERE m = st(v)
-			     ELSE APlus(l1, r1) ENDCASES) ENDCASES WHERE l1 = Opt(st, l), r1 = Opt(st, r))
+			     ELSE AMult(l1, r1) ENDCASES) ENDCASES WHERE l1 = Opt(st, l), r1 = Opt(st, r))
       ENDCASES) 
      MEASURE aexp BY <<
 

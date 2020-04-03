@@ -162,6 +162,12 @@
    (aeval termination
     "opsemwithstates.aeval(opsemwithstates.st, opsemwithstates.r)"
     "nil")))
+ (aexpexec 0
+  (aexpexec-1 nil 3794896285
+   ("" (auto-rewrite-defs)
+    (("" (skosimp*) (("" (assert) (("" (postpone) nil nil)) nil)) nil))
+    nil)
+   nil shostak))
  (beval_TCC1 0
   (beval_TCC1-1 nil 3794761553
    ("" (auto-rewrite-defs)
@@ -241,10 +247,91 @@
     (aeval def-decl "nat" opsemwithstates nil)
     (beval def-decl "bool" opsemwithstates nil))
    shostak))
+ (Minus_0 0
+  (Minus_0-1 nil 3794896338
+   ("" (auto-rewrite-defs)
+    (("" (skosimp*) (("" (assert) nil nil)) nil)) nil)
+   ((real_le_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (Minus const-decl "nat" opsemwithstates nil))
+   shostak))
+ (Minus_from_0 0
+  (Minus_from_0-1 nil 3794896379
+   ("" (auto-rewrite-defs)
+    (("" (skosimp*)
+      (("" (rewrite "Minus" 1) (("" (smash) nil nil)) nil)) nil))
+    nil)
+   ((real_le_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (>= const-decl "bool" reals nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (number nonempty-type-decl nil numbers nil)
+    (Minus const-decl "nat" opsemwithstates nil))
+   shostak))
  (Opt_sound 0
   (Opt_sound-1 nil 3794839797
    ("" (auto-rewrite-theory opsemwithstates)
-    (("" (skosimp*) (("" (assert) (("" (postpone) nil nil)) nil)) nil))
+    (("" (skolem! 1)
+      (("" (induct "a")
+        (("1" (skosimp*) (("1" (assert) nil nil)) nil)
+         ("2" (skosimp*) (("2" (assert) nil nil)) nil)
+         ("3" (skosimp*) (("3" (assert) (("3" (smash) nil nil)) nil))
+          nil)
+         ("4" (skosimp*)
+          (("4" (smash)
+            (("1" (rewrite -4 -2)
+              (("1" (rewrite -2 3 :dir RL)
+                (("1" (rewrite "Minus_from_0" 3) nil nil)) nil))
+              nil)
+             ("2" (rewrite -4 -2)
+              (("2" (rewrite -2 3 :dir RL)
+                (("2" (rewrite "Minus_from_0" 3) nil nil)) nil))
+              nil))
+            nil))
+          nil)
+         ("5" (skosimp*) (("5" (smash) nil nil)) nil))
+        nil))
+      nil))
     nil)
-   nil shostak)))
+   ((aexpt type-decl nil opsemwithstates nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (number nonempty-type-decl nil numbers nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (vars type-decl nil opsemwithstates nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (>= const-decl "bool" reals nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (statet type-eq-decl nil opsemwithstates nil)
+    (aeval def-decl "nat" opsemwithstates nil)
+    (Opt def-decl "aexpt" opsemwithstates nil)
+    (aexpt_induction formula-decl nil opsemwithstates nil)
+    (nnint_plus_nnint_is_nnint application-judgement "nonneg_int"
+     integers nil)
+    (real_le_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (Minus const-decl "nat" opsemwithstates nil)
+    (Minus_from_0 formula-decl nil opsemwithstates nil)
+    (nnint_times_nnint_is_nnint application-judgement "nonneg_int"
+     integers nil))
+   shostak)))
 
