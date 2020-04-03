@@ -174,6 +174,7 @@ FORALL x: aexpt
     1 * x = l
     x * 1 = x
 ```
+The identities involving `-`, implemented as the function `Minus`, are stated and proved in the lemmas `Minus_0` and `Minus_from_0`.
 
 The theorem `Opt_sound` states that `Opt` is sound, that is, optimizing any arithmatic expression with respect to any state and
 then evaluating it with respect to the same state produces the same value as directly evaluating the expression with respect to
@@ -181,3 +182,6 @@ the state.
 
 All TCCs generated are manually proved and the proofs are saved under PVS's default names `<tcc_name>-1`, where `<tcc_name>`
 represents the name of the TCC generated.
+
+All lemmas and theorems have been proved and the proofs saved to the associated `.prf` file under PVS's default name `<formula_name>-1`,
+where `<formula-name>` reperesents the name of the theorem or lemma.
