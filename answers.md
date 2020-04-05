@@ -200,6 +200,12 @@ sequence and `Vote` adds a vote to an existing sequence.
 Now, we define some functions related to `VoteSequence` that will become useful later. `size` returns the size of a `VoteSequence`
 inductively. `concat` concatenates two `VoteSequence`s.
 
+We firstly assert that the only `VoteSequence` with size 0 is `Null` in the lemma `Size_0_Null`. We prove this by induction on
+`v`, where as the base case has the same antecedent and consequent formula, it is automatially handled. For the inductive case,
+the antecedent will have an expression of the form `size(Vote(...)) = 0` which when rewritten with the definition of `(size)`
+will reduce to the form `1 + ... = 0`, which is a contradiction. This rewrite can be performed by `(assert)`, and this
+completes the proof.
+
 We state the lemma `Concat_Size` to express that the size of the concatenation of two `VoteSequence`s will be the sum of their 
 sizes. We prove this by inducting on the second sequence by `(induct)`, and as each case can be proved by direct rewrites,
 `(assert)` suffices.
@@ -249,14 +255,27 @@ based on if the counter becomes 0, and in each case rewriting with the definitio
 case split is apparent from the `IF` in the definition of `maj2`, it is automatically handled by `(smash)`, and `(smash)`
 completes the proof.
 
+Now, we prove the lemma `Maj2_0_Vz_Null` which states that if the counter returned by `maj2` is 0, then `vz` returned by it
+must be null. We prove this by induction. The base case can be proven by direct rewrites, and `(assert)` suffices. For the
+induction case, we case split based on the `IF` in the definition of `maj2`. For all cases other than the last `ELSE`, we
+must have a contradiction, as the counter cannot be zero after the vote. In the last `ELSE` case, rewriting gives us that the
+output for `vz` must be `NULL`. Thus, using `(smash)`, we can automatically perform the case splits, reductions and rewrites
+to conclude the proof.
+
 Our proof strategy is to emulate the proof submitted in Assignment 1, and we see that in that proof in one case, we talk about
-the stretch of latestmost votes where a single candidate was being tracked and argue that this candidate must have recieved the
-majority for this stretch. This stretch, in our case, is `vz`, and to argue the majority, we prove our first invariant 
-`Maj2_Inv1`, which states that for all `v: VoteSequence`, the tracked candidate holds majority in `vz`.
+the stretch of latestmost votes where a single candidate was being tracked and argue about the majority for this stretch. This 
+stretch, in our case, is `vz`, and to argue the about the majority, we prove our first invariant  `Maj2_Inv1`, which states that 
+for all `v: VoteSequence`, the candidate tracked at the end of the sequence leads over all other candidates combined by the value
+of the counter at that point.
 
-#### Proof of Maj2_Inv1:
+We prove this by using `(induct v)`. The base case involves direct rewriting as all conditionals in all definitions are resolved,
+and `(assert)` should suffice.
 
-
+For the inductive case, we must case split based on the `IF` condition within `maj2`, and we do this and simplify in a single step
+using `(smash)`. In the first case we have that the counter before the last vote was 0, and we apply `Maj2_0_Vz_Null` to rewrite 
+the `vz` before the last vote to `Null` in the consequent, and rewrite directly using `(assert)` to complete the proof. Since in
+the other cases all conditionals are fully resolved, direct rewriting will prove the sequent, and the `(smash)` used to split the
+cases should handle these cases automatically.
 
 Now we wish to prove our correctness theorem by strong induction over the size of `VoteSequence`. To do this, we define the lemma
 `Maj2_Inv` which says that for all natural number `N`, and for all `v: VoteSequence` of size at most `N`, and for all `c: Candidate`,

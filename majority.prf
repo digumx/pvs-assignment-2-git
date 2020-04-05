@@ -2,6 +2,36 @@
  (size_TCC1 0
   (size_TCC1-1 nil 3795087144 ("" (termination-tcc) nil nil) nil nil
    (size termination "majority.size(majority.vs)" "nil")))
+ (Size_0_Null 0
+  (Size_0_Null-1 nil 3795104678
+   ("" (auto-rewrite-defs)
+    (("" (induct v) (("" (skosimp*) (("" (assert) nil nil)) nil)) nil))
+    nil)
+   ((posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil)
+    (VoteSequence_induction formula-decl nil majority nil)
+    (Null adt-constructor-decl "(Null?)" majority nil)
+    (Null? adt-recognizer-decl "[VoteSequence -> boolean]" majority
+     nil)
+    (size def-decl "nat" majority nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (>= const-decl "bool" reals nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (number nonempty-type-decl nil numbers nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (VoteSequence type-decl nil majority nil))
+   shostak))
  (Concat_Size 0
   (Concat_Size-1 nil 3795087320
    ("" (auto-rewrite-defs)
@@ -154,14 +184,109 @@
     (boolean nonempty-type-decl nil booleans nil)
     (VoteSequence type-decl nil majority nil))
    shostak))
+ (Maj2_0_Vz_Null 0
+  (Maj2_0_Vz_Null-1 nil 3795111573
+   ("" (auto-rewrite-defs)
+    (("" (induct v)
+      (("1" (assert) nil nil)
+       ("2" (skosimp*) (("2" (smash) nil nil)) nil))
+      nil))
+    nil)
+   ((VoteSequence type-decl nil majority nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (number nonempty-type-decl nil numbers nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (State2 type-decl nil majority nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (>= const-decl "bool" reals nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (n2 adt-accessor-decl "[State2 -> nat]" majority nil)
+    (maj2 def-decl "State2" majority nil)
+    (vz adt-accessor-decl "[State2 -> VoteSequence]" majority nil)
+    (Null? adt-recognizer-decl "[VoteSequence -> boolean]" majority
+     nil)
+    (Null adt-constructor-decl "(Null?)" majority nil)
+    (VoteSequence_induction formula-decl nil majority nil)
+    (nnint_plus_posint_is_posint application-judgement "posint"
+     integers nil)
+    (int_minus_int_is_int application-judgement "int" integers nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil))
+   shostak))
  (Maj2_Inv1 0
   (Maj2_Inv1-1 nil 3795103102
    ("" (auto-rewrite-defs)
     (("" (induct v)
-      (("1" (assert) nil nil)
-       ("2" (assert) (("2" (postpone) nil nil)) nil)
-       ("3" (postpone) nil nil))
+      (("1" (assert) nil nil) ("2" (assert) nil nil)
+       ("3" (skosimp*)
+        (("3" (smash)
+          (("3" (rewrite Maj2_0_Vz_Null 1) (("3" (assert) nil nil))
+            nil))
+          nil))
+        nil))
       nil))
     nil)
-   nil shostak)))
+   ((VoteSequence type-decl nil majority nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (Candidate type-decl nil majority nil)
+    (number nonempty-type-decl nil numbers nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (numfield nonempty-type-eq-decl nil number_fields nil)
+    (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
+    (* const-decl "[numfield, numfield -> numfield]" number_fields nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (>= const-decl "bool" reals nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (Tally type-eq-decl nil majority nil)
+    (tally_votes def-decl "Tally" majority nil)
+    (size def-decl "nat" majority nil)
+    (State2 type-decl nil majority nil)
+    (n2 adt-accessor-decl "[State2 -> nat]" majority nil)
+    (maj2 def-decl "State2" majority nil)
+    (c2 adt-accessor-decl "[State2 -> Candidate]" majority nil)
+    (vz adt-accessor-decl "[State2 -> VoteSequence]" majority nil)
+    (VoteSequence_induction formula-decl nil majority nil)
+    (int_minus_int_is_int application-judgement "int" integers nil)
+    (even_times_int_is_even application-judgement "even_int" integers
+     nil)
+    (nnint_times_nnint_is_nnint application-judgement "nonneg_int"
+     integers nil)
+    (tally_null const-decl "Tally" majority nil)
+    (tally_sum const-decl "Tally" majority nil)
+    (tally_cand const-decl "Tally" majority nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (even_minus_even_is_even application-judgement "even_int" integers
+     nil)
+    (int_times_even_is_even application-judgement "even_int" integers
+     nil)
+    (nnint_plus_nnint_is_nnint application-judgement "nonneg_int"
+     integers nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil)
+    (nnint_plus_posint_is_posint application-judgement "posint"
+     integers nil)
+    (posint_times_posint_is_posint application-judgement "posint"
+     integers nil)
+    (Maj2_0_Vz_Null formula-decl nil majority nil))
+   shostak)))
 

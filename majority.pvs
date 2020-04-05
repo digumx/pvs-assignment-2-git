@@ -26,7 +26,7 @@ BEGIN
      ENDCASES)
   MEASURE v2 BY <<
 
-  Size_0_Null
+  Size_0_Null: LEMMA FORALL(v: VoteSequence): size(v) = 0 IMPLIES v = Null
 
   Concat_Size: LEMMA FORALL(v1: VoteSequence): FORALL (v2: VoteSequence): size(concat(v1, v2)) = size(v1) + size(v2)
 
@@ -78,7 +78,9 @@ BEGIN
 
   Maj2_Concat: LEMMA FORALL (v: VoteSequence): v = concat(vr(maj2(v)), vz(maj2(v)))
 
-  Maj2_Inv1: LEMMA FORALL (v: VoteSequence): size(v) > 0 IMPLIES (2*tally_votes(vsz)(cdt) > size(vsz)) WHERE vsz = vz(maj2(v)), cdt = c2(maj2(v))
+  Maj2_0_Vz_Null: LEMMA FORALL (v: VoteSequence): n2(maj2(v)) = 0 IMPLIES vz(maj2(v)) = Null
+
+  Maj2_Inv1: LEMMA FORALL (v: VoteSequence): (2*tally_votes(vsz)(cdt) - size(vsz) = n2(maj2(v))) WHERE vsz = vz(maj2(v)), cdt = c2(maj2(v))
 
   Majority_Correct: THEOREM FORALL (c: Candidate): FORALL (v : VoteSequence): 2*tally_votes(v)(c) > size(v) IMPLIES majority(v)=c
  
