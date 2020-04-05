@@ -1,0 +1,86 @@
+majority : THEORY
+BEGIN
+
+  Candidate: TYPE = {A, B, C, D, E}
+  Tally: TYPE = ARRAY[Candidate -> nat]
+
+  tally_plus(t1: Tally, t2: Tally): Tally = LAMBDA (c: Candidate): t1(c) + t2(c)
+
+  VoteSequence: DATATYPE
+  BEGIN
+    Null: Null?
+    Vote(c: Candidate, v: VoteSequence): Vote?
+  END VoteSequence
+
+  size(v: VoteSequence): RECURSIVE nat =
+    (CASES v OF
+       Null:        0,
+       Vote(c, vs): 1 + size(vs)
+     ENDCASES)
+  MEASURE v BY <<
+
+  concat(v1: VoteSequence, v2: VoteSequence): RECURSIVE VoteSequence =
+    (CASES v2 OF
+       Null:        v1,
+       Vote(c, vs): Vote(c, concat(v1, vs))
+     ENDCASES)
+  MEASURE v2 BY <<
+
+  Size_0_Null
+
+  Concat_Size: LEMMA FORALL(v1: VoteSequence): FORALL (v2: VoteSequence): size(concat(v1, v2)) = size(v1) + size(v2)
+
+  tally_null: Tally                      = LAMBDA (c: Candidate): 0
+  tally_cand(cd: Candidate): Tally       = LAMBDA (c: Candidate): (IF c=cd THEN 1 ELSE 0 ENDIF)
+  tally_sum(t1: Tally, t2: Tally): Tally = LAMBDA (c: Candidate): t1(c) + t2(c)
+
+  tally_votes(v: VoteSequence): RECURSIVE Tally =
+    (CASES v OF
+       Null:        tally_null,
+       Vote(c, vs): tally_sum(tally_cand(c), tally_votes(vs))
+     ENDCASES)
+  MEASURE v BY <<
+
+  Concat_Tally: LEMMA FORALL(v1: VoteSequence): FORALL(v2: VoteSequence): tally_votes(concat(v1, v2)) = tally_sum(tally_votes(v1), tally_votes(v2))
+
+  State: DATATYPE BEGIN State(c: Candidate, n: nat): State? END State
+
+  maj(v: VoteSequence): RECURSIVE State =
+    (CASES v OF
+       Null:                           State(A, 0),
+       Vote(c, vs): ((IF np=0 THEN     State(c, 1)
+                      ELSIF ctp=c THEN State(ctp, np+1)
+		      ELSE             State(ctp, np-1)
+                      ENDIF) WHERE ctp = c(maj(vs)),
+                                   np  = n(maj(vs)))
+     ENDCASES)
+  MEASURE v BY <<
+
+  majority(v: VoteSequence): Candidate = c(maj(v))
+
+  State2: DATATYPE BEGIN State2(c2: Candidate, n2: nat, vz: VoteSequence, vr: VoteSequence): State2? END State2
+
+  maj2(v: VoteSequence): RECURSIVE State2 =
+    (CASES v OF
+       Null: State2(A, 0, Null, Null),
+       Vote(c, vs): ((IF n2p=0 THEN    State2(c, 1, Vote(c, vzp), vrp)
+                      ELSIF c2p=c THEN State2(c2p, n2p+1, Vote(c, vzp), vrp)
+		      ELSIF n2p>1 THEN State2(c2p, n2p-1, Vote(c, vzp), vrp)
+		      ELSE             State2(c2p, n2p-1, Null, Vote(c, concat(vrp, vzp)))
+                      ENDIF) WHERE c2p = c2(maj2(vs)),
+		                   n2p = n2(maj2(vs)),
+				   vzp = vz(maj2(vs)),
+				   vrp = vr(maj2(vs)))
+     ENDCASES)
+  MEASURE v BY <<
+
+  Maj_Maj2_Equiv: LEMMA FORALL (v: VoteSequence): c2(maj2(v)) = c(maj(v)) AND n2(maj2(v)) = n(maj(v))
+
+  Maj2_Concat: LEMMA FORALL (v: VoteSequence): v = concat(vr(maj2(v)), vz(maj2(v)))
+
+  Maj2_Inv1: LEMMA FORALL (v: VoteSequence): size(v) > 0 IMPLIES (2*tally_votes(vsz)(cdt) > size(vsz)) WHERE vsz = vz(maj2(v)), cdt = c2(maj2(v))
+
+  Majority_Correct: THEOREM FORALL (c: Candidate): FORALL (v : VoteSequence): 2*tally_votes(v)(c) > size(v) IMPLIES majority(v)=c
+ 
+
+END majority

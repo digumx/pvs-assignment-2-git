@@ -185,3 +185,80 @@ represents the name of the TCC generated.
 
 All lemmas and theorems have been proved and the proofs saved to the associated `.prf` file under PVS's default name `<formula_name>-1`,
 where `<formula-name>` reperesents the name of the theorem or lemma.
+
+## Problem C.1:
+### Part a:
+
+We firstly define a type `Candidate` with 5 possible values to represent candidates. Note that adding or removing candidates can be 
+done and the proofs should still hold. Next, we define type `Tally` as a function from by changing this type, no other changes to 
+the theory should be necessary, candidates to `nat` to store the tally of each candidate. We define `tally_plus` to add two tallies
+together.
+
+Next, we define the inductive type `VoteSequence` to store a sequence of votes. It has two constructors, `Null` makes an empty 
+sequence and `Vote` adds a vote to an existing sequence.
+
+Now, we define some functions related to `VoteSequence` that will become useful later. `size` returns the size of a `VoteSequence`
+inductively. `concat` concatenates two `VoteSequence`s.
+
+We state the lemma `Concat_Size` to express that the size of the concatenation of two `VoteSequence`s will be the sum of their 
+sizes. We prove this by inducting on the second sequence by `(induct)`, and as each case can be proved by direct rewrites,
+`(assert)` suffices.
+
+We define `tally_null` to represent the 0 `Tally` and `tally_cand(c)` to represent the `Tally` where `c: Candidate` has recieved
+a singel vote, and no one else has recieved a vote. We define functon `tally_sum` to add two tallies together, the addition is done
+point wise. The recursive function `tally_votes` calculates the tally of each candidate in a given vote sequence.
+
+We now define the lemma `Concat_Tally` to state that the tallies of concatenated vote sequences are the sum of the tallies of the
+sequences. To prove this, we remove quantifications via `(skosimp*)` and apply `(extensionality)` to reduce the functional equation
+to a simplified form. Then, we regeneralize with `(generalize-skolem-constants)` and start induction with `(induct)`. Now, for each
+case, a combination of `(assert)` and `(rewrite)` suffices.
+
+Our algorithm acts iteratively by updating a counter and a `Candidate` variable by reading one vote at a time. We capture this
+behavior by defining the recursive fucntion `majority` which takes a `VoteSequence` and inductively returns the state of the 
+algorithm after acting on this sequence. We define the state of the algorithm in the datatype `State`, which is just a pair of
+`Candidate` and `nat`. We initially set the candidate tracker to `A`, changing this to any candidate should not invalidate any
+proof.
+
+Now, we define `majority` to take the `State` returned by `maj` and give a `Candidate`.
+
+### Part b:
+
+The correctness of the algorithm is stated by the theorem `Majority_Correct`. A candidate has majority if he has more than half the
+votes, that is, if in the vote sequence twice his tally is more than size of the sequence. So, given that this happens, if our
+algorithm is correct, it should return this candidate. This is what the theorem captures.
+
+### Part c:
+
+To prove `Majority_Correct`, we prove a series of lemmas and invariants. To do this, we must track certain extra states through 
+`maj`. These will not affect the computation, but will help us to express invariants. To do this, we redefine a copy of `maj`
+as `maj2` with extra stases. The `State2` datatype represents `maj_ext`'s state, with `c2` and `n2` being copies of `c` and
+`n`. `vz` tracks the subsequence of the vote sequence since the last time 0 was encountered to to the current vote, including
+the vote before which the counter was 0 for the last time, and `vr` tracks the rest of the vote sequence upto that point. We
+capture this inductively by adding the last vote `vz` and keeping `vr` the same if the last vote did not make the counter 0, else
+we make `vz` `Null` and concatenate all it's contents along with the last vote to `vr`.
+
+The first thing we prove is the lemma `Maj_Maj2_Equiv` which states that the candidate and counter tracked by `maj` and `maj2`
+are the same at all times. We prove this by first initiating induction using `(induct)`. For the two base cases generated,
+we rewrite with `(assert)` to complete the proof. For the inductive case, using `(skosimp*)` to remove quantifications and
+implications, we use `(smash)` to automatically case split, rewrite and complete the proof.
+
+Next, we prove the lemma `Maj2_Concat`, which states that the two `VoteSequence`s being tracked in the extended state when
+concatenated gives the original `VoteSequence`. We do this by `(induct v)`, and the base case is handled by rewriting with
+`(assert)`. For the inductive case, we use `(skosimp*)` to remove quantifications and implications. Then, we must case split
+based on if the counter becomes 0, and in each case rewriting with the definitions of `maj2` and `concat` suffices. As the
+case split is apparent from the `IF` in the definition of `maj2`, it is automatically handled by `(smash)`, and `(smash)`
+completes the proof.
+
+Our proof strategy is to emulate the proof submitted in Assignment 1, and we see that in that proof in one case, we talk about
+the stretch of latestmost votes where a single candidate was being tracked and argue that this candidate must have recieved the
+majority for this stretch. This stretch, in our case, is `vz`, and to argue the majority, we prove our first invariant 
+`Maj2_Inv1`, which states that for all `v: VoteSequence`, the tracked candidate holds majority in `vz`.
+
+#### Proof of Maj2_Inv1:
+
+
+
+Now we wish to prove our correctness theorem by strong induction over the size of `VoteSequence`. To do this, we define the lemma
+`Maj2_Inv` which says that for all natural number `N`, and for all `v: VoteSequence` of size at most `N`, and for all `c: Candidate`,
+if `c` holds a majority in `v`, we must have that `c2(maj2(v)) = c`. Then, proving this formula by induction on `N` is essencially
+performing strong induction on the size of 
