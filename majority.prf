@@ -116,6 +116,84 @@
     (number nonempty-type-decl nil numbers nil)
     (Candidate type-decl nil majority nil))
    shostak))
+ (Tally_2 0
+  (Tally_2-1 nil 3795150115
+   ("" (auto-rewrite-defs)
+    (("" (skolem!)
+      (("" (induct v)
+        (("1" (assert) nil nil)
+         ("2" (skosimp*)
+          (("2" (case "c1!1 = c2!1 OR c1!1 /= c2!1")
+            (("1" (split -1)
+              (("1" (propax) nil nil)
+               ("2" (smash)
+                (("2" (rewrite tally_cand 2)
+                  (("2" (rewrite tally_cand 2)
+                    (("2" (lift-if)
+                      (("2" (lift-if)
+                        (("2" (lift-if)
+                          (("2" (bddsimp)
+                            (("1" (assert) nil nil)
+                             ("2" (assert) nil nil)
+                             ("3" (assert) nil nil)
+                             ("4" (assert) nil nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil)
+             ("2" (smash) nil nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   ((nnint_plus_nnint_is_nnint application-judgement "nonneg_int"
+     integers nil)
+    (VoteSequence type-decl nil majority nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (Candidate type-decl nil majority nil)
+    (/= const-decl "boolean" notequal nil)
+    (number nonempty-type-decl nil numbers nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (<= const-decl "bool" reals nil)
+    (numfield nonempty-type-eq-decl nil number_fields nil)
+    (+ const-decl "[numfield, numfield -> numfield]" number_fields nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (>= const-decl "bool" reals nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (Tally type-eq-decl nil majority nil)
+    (tally_votes def-decl "Tally" majority nil)
+    (size def-decl "nat" majority nil)
+    (VoteSequence_induction formula-decl nil majority nil)
+    (tally_null const-decl "Tally" majority nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
+    (tally_sum const-decl "Tally" majority nil)
+    (real_le_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil)
+    (odd_plus_even_is_odd application-judgement "odd_int" integers nil)
+    (even_plus_odd_is_odd application-judgement "odd_int" integers nil)
+    (nnint_plus_posint_is_posint application-judgement "posint"
+     integers nil)
+    (even_plus_even_is_even application-judgement "even_int" integers
+     nil)
+    (tally_cand const-decl "Tally" majority nil))
+   shostak))
  (maj_TCC1 0
   (maj_TCC1-1 nil 3795094484 ("" (subtype-tcc) nil nil) nil nil
    (maj subtype "(number_fields.-)(majority.np, 1)" "nat")))
@@ -223,6 +301,65 @@
     (boolean nonempty-type-decl nil booleans nil)
     (VoteSequence type-decl nil majority nil))
    shostak))
+ (Maj2_Inv0 0
+  (Maj2_Inv0-1 nil 3795156152
+   ("" (auto-rewrite-defs)
+    (("" (induct v)
+      (("1" (assert) nil nil)
+       ("2" (skosimp*)
+        (("2" (rewrite maj2 1)
+          (("2" (lift-if)
+            (("2" (bddsimp)
+              (("1" (assert) nil nil) ("2" (assert) nil nil)
+               ("3" (assert) nil nil)
+               ("4" (beta)
+                (("4" (rewrite Maj2_Concat 4 :dir RL)
+                  (("4" (rewrite maj2 4)
+                    (("4" (lift-if)
+                      (("4" (bddsimp) (("4" (assert) nil nil)) nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   ((Maj2_Concat formula-decl nil majority nil)
+    (int_minus_int_is_int application-judgement "int" integers nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil)
+    (Vote adt-constructor-decl "[[Candidate, VoteSequence] -> (Vote?)]"
+     majority nil)
+    (Vote? adt-recognizer-decl "[VoteSequence -> boolean]" majority
+     nil)
+    (Candidate type-decl nil majority nil)
+    (VoteSequence_induction formula-decl nil majority nil)
+    (vr adt-accessor-decl "[State2 -> VoteSequence]" majority nil)
+    (maj2 def-decl "State2" majority nil)
+    (n2 adt-accessor-decl "[State2 -> nat]" majority nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (>= const-decl "bool" reals nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (State2 type-decl nil majority nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (number nonempty-type-decl nil numbers nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (VoteSequence type-decl nil majority nil))
+   shostak))
  (Maj2_Inv1 0
   (Maj2_Inv1-1 nil 3795103102
    ("" (auto-rewrite-defs)
@@ -317,20 +454,98 @@
                               (case "c2(maj2(Vote2_var!1))=c!1 OR c2(maj2(Vote2_var!1))/=c!1")
                               (("1"
                                 (split -1)
-                                (("1" (postpone) nil nil)
-                                 ("2" (postpone) nil nil))
+                                (("1" (assert) nil nil)
+                                 ("2"
+                                  (lemma
+                                   "Maj2_Inv1"
+                                   ("v" "Vote2_var!1"))
+                                  (("2"
+                                    (beta -1)
+                                    (("2"
+                                      (lemma
+                                       "Tally_2"
+                                       ("c1"
+                                        "c2(maj2(Vote2_var!1))"
+                                        "c2"
+                                        "c!1"
+                                        "v"
+                                        "vz(maj2(Vote2_var!1))"))
+                                      (("2"
+                                        (lemma
+                                         "Concat_Tally"
+                                         ("v1"
+                                          "vr(maj2(Vote2_var!1))"
+                                          "v2"
+                                          "vz(maj2(Vote2_var!1))"))
+                                        (("2"
+                                          (decompose-equality -1)
+                                          (("2"
+                                            (instantiate -1 "c!1")
+                                            (("2"
+                                              (rewrite
+                                               "Maj2_Concat"
+                                               -1
+                                               :dir
+                                               RL)
+                                              (("2"
+                                                (rewrite
+                                                 "tally_sum"
+                                                 -1)
+                                                (("2"
+                                                  (instantiate
+                                                   -10
+                                                   "vr(maj2(Vote2_var!1))")
+                                                  (("2"
+                                                    (lemma
+                                                     "Maj2_Inv0"
+                                                     ("v"
+                                                      "Vote2_var!1"))
+                                                    (("2"
+                                                      (lemma
+                                                       "Concat_Size"
+                                                       ("v1"
+                                                        "vr(maj2(Vote2_var!1))"
+                                                        "v2"
+                                                        "vz(maj2(Vote2_var!1))"))
+                                                      (("2"
+                                                        (rewrite
+                                                         "Maj2_Concat"
+                                                         -1
+                                                         :dir
+                                                         RL)
+                                                        (("2"
+                                                          (rewrite
+                                                           "size"
+                                                           -10)
+                                                          (("2"
+                                                            (assert)
+                                                            nil
+                                                            nil))
+                                                          nil))
+                                                        nil))
+                                                      nil))
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
                                 nil)
-                               ("2" (postpone) nil nil))
+                               ("2" (smash) nil nil))
                               nil))
                             nil)
-                           ("2" (postpone) nil nil))
+                           ("2" (smash) nil nil))
                           nil)
-                         ("2" (postpone) nil nil))
+                         ("2" (assert) nil nil))
                         nil)
-                       ("2" (postpone) nil nil))
+                       ("2" (smash) nil nil))
                       nil))
                     nil)
-                   ("2" (postpone) nil nil))
+                   ("2" (smash) nil nil))
                   nil))
                 nil))
               nil))
@@ -339,7 +554,82 @@
         nil))
       nil))
     nil)
-   nil shostak)
+   ((int_minus_int_is_int application-judgement "int" integers nil)
+    (nnint_times_nnint_is_nnint application-judgement "nonneg_int"
+     integers nil)
+    (even_times_int_is_even application-judgement "even_int" integers
+     nil)
+    (number nonempty-type-decl nil numbers nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (>= const-decl "bool" reals nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (pred type-eq-decl nil defined_types nil)
+    (VoteSequence type-decl nil majority nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (<= const-decl "bool" reals nil) (size def-decl "nat" majority nil)
+    (> const-decl "bool" reals nil)
+    (numfield nonempty-type-eq-decl nil number_fields nil)
+    (* const-decl "[numfield, numfield -> numfield]" number_fields nil)
+    (Candidate type-decl nil majority nil)
+    (Tally type-eq-decl nil majority nil)
+    (tally_votes def-decl "Tally" majority nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (State2 type-decl nil majority nil)
+    (c2 adt-accessor-decl "[State2 -> Candidate]" majority nil)
+    (maj2 def-decl "State2" majority nil)
+    (n2 adt-accessor-decl "[State2 -> nat]" majority nil)
+    (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
+    (nat_induction formula-decl nil naturalnumbers nil)
+    (Size_0_Null formula-decl nil majority nil)
+    (real_le_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (real_gt_is_strict_total_order name-judgement
+     "(strict_total_order?[real])" real_props nil)
+    (tally_null const-decl "Tally" majority nil)
+    (nnint_plus_nnint_is_nnint application-judgement "nonneg_int"
+     integers nil)
+    (posint_plus_nnint_is_posint application-judgement "posint"
+     integers nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (tally_sum const-decl "Tally" majority nil)
+    (tally_cand const-decl "Tally" majority nil)
+    (odd_plus_even_is_odd application-judgement "odd_int" integers nil)
+    (even_minus_odd_is_odd application-judgement "odd_int" integers
+     nil)
+    (even_plus_even_is_even application-judgement "even_int" integers
+     nil)
+    (Concat_Tally formula-decl nil majority nil)
+    (vr adt-accessor-decl "[State2 -> VoteSequence]" majority nil)
+    (Maj2_Inv0 formula-decl nil majority nil)
+    (Vote? adt-recognizer-decl "[VoteSequence -> boolean]" majority
+     nil)
+    (Vote adt-constructor-decl "[[Candidate, VoteSequence] -> (Vote?)]"
+     majority nil)
+    (Concat_Size formula-decl nil majority nil)
+    (Maj2_Concat formula-decl nil majority nil)
+    (concat def-decl "VoteSequence" majority nil)
+    (vz adt-accessor-decl "[State2 -> VoteSequence]" majority nil)
+    (Tally_2 formula-decl nil majority nil)
+    (Maj2_Inv1 formula-decl nil majority nil)
+    (/= const-decl "boolean" notequal nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
+    (VoteSequence_induction formula-decl nil majority nil)
+    (+ const-decl "[numfield, numfield -> numfield]" number_fields nil)
+    (nnint_plus_posint_is_posint application-judgement "posint"
+     integers nil))
+   shostak)
   (Maj2_Inv2-1 nil 3795117265
    ("" (auto-rewrite-defs)
     (("" (skolem!)
@@ -349,5 +639,43 @@
         nil))
       nil))
     nil)
-   nil shostak)))
+   nil shostak))
+ (Majority_Correct 0
+  (Majority_Correct-1 nil 3795176744
+   ("" (skosimp*)
+    (("" (rewrite majority 1)
+      (("" (lemma "Maj_Maj2_Equiv" ("v" "v!1"))
+        (("" (flatten -1)
+          (("" (rewrite -1 1 :dir RL)
+            ((""
+              (lemma "Maj2_Inv2" ("c" "c!1" "N" "size(v!1)" "v" "v!1"))
+              (("" (smash) nil nil)) nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   ((majority const-decl "Candidate" majority nil)
+    (VoteSequence type-decl nil majority nil)
+    (size def-decl "nat" majority nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (>= const-decl "bool" reals nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (number nonempty-type-decl nil numbers nil)
+    (Candidate type-decl nil majority nil)
+    (Maj2_Inv2 formula-decl nil majority nil)
+    (real_le_is_total_order name-judgement "(total_order?[real])"
+     real_props nil)
+    (Maj_Maj2_Equiv formula-decl nil majority nil))
+   shostak)))
 

@@ -219,6 +219,12 @@ sequences. To prove this, we remove quantifications via `(skosimp*)` and apply `
 to a simplified form. Then, we regeneralize with `(generalize-skolem-constants)` and start induction with `(induct)`. Now, for each
 case, a combination of `(assert)` and `(rewrite)` suffices.
 
+The lemma `Tally_2` states that for any two distinct candidates, the sum of their tallies over any vote sequence is at most the 
+size of the vote sequence. We prove this by induction on `v`. The base case is proved by performing simple rewrites with `(assert)`.
+For the inductive case, we case split simplify the sequent using `(skosimp*)` and case split based on if the two candidates are
+equal. Then, we use `(rewrite)`, `(lift-if)` and `(bddsimp)` to automatically split into cases resolving the `tally_cand` 
+expressions. For each resulting subgoal, directly rewriting with `(assert)` proves the goal.
+
 Our algorithm acts iteratively by updating a counter and a `Candidate` variable by reading one vote at a time. We capture this
 behavior by defining the recursive fucntion `majority` which takes a `VoteSequence` and inductively returns the state of the 
 algorithm after acting on this sequence. We define the state of the algorithm in the datatype `State`, which is just a pair of
@@ -262,6 +268,16 @@ must have a contradiction, as the counter cannot be zero after the vote. In the 
 output for `vz` must be `NULL`. Thus, using `(smash)`, we can automatically perform the case splits, reductions and rewrites
 to conclude the proof.
 
+The first invariant we prove is stated by `Maj2_Inv0`, which simply states that `vr` is such that after processing it the value
+of the counter is indeed 0. We prove this via induction on `v`. The base case is handled automatically by rewriting with `(assert)`.
+For the inductive case, we use `(rewrite maj2)` followed by `(lift-if)` and `(bddsimp)` to break into cases based on which branch
+of `maj2`'s `IF` was executed for the last vote. The first three cases can be proved by direct rewriting, and are discharged by
+`(assert)`. For the final `ELSE` case, we use `(beta)` reduce to remove the accessor on constructor expression, and use 
+`Maj2_Concat` to remove the concatenation. Then, using `(rewrite maj2)` followed by `(lift-if)` and `(bddsimp)` we automatically
+handle the cases of the remaining `maj2` in the consequent, and because of the other consequent expression, `(bddsimp)` reduces
+all but the last `ELSE` case to tautologies and discharges them automatically. Now, for this case, a direct rewrite with
+`(assert)` completes the proof.
+
 Our proof strategy is to emulate the proof submitted in Assignment 1, and we see that in that proof in one case, we talk about
 the stretch of latestmost votes where a single candidate was being tracked and argue about the majority for this stretch. This 
 stretch, in our case, is `vz`, and to argue the about the majority, we prove our first invariant  `Maj2_Inv1`, which states that 
@@ -283,6 +299,8 @@ if `c` holds a majority in `v`, we must have that `c2(maj2(v)) = c`. Then, provi
 performing strong induction on the size of the `VoteSequence`. We also add the condition that the counter gives us the number of
 votes by which the candidate leads over all the rest combined, this will be useful as an invariant condidtion.
 
+#### Proof of Maj2_Inv2:
+
 To prove the lemma, we use `(skolem!)` to remove the outermost quantification, and then initiate induction with `(induct N)`. The 
 base case is when `N` is 0 or lesser, and simplifying with `(skosimp*)`, rewriting with `Size_0_Null` using `(rewrite)` followed 
 by using `(assert)` leads to a contradiction as for `Null`, majority of any candidate cannot hold.
@@ -295,7 +313,7 @@ We again apply induction, this time on `v`. The base case is proved by rewriting
 
 We define a general pattern for case splitting manually using `(case)`. If we want to case split based on if some `P` holds, then
 `(case P)` will produce a subgoal where we will have to prove `P` holds from the antecedents. To avoid this, we instead use
-`(case "P OR NOT P")`. This produces two subgoals, one of which has `P OR NOT P` as a consequent, and can be handled by `(bddsimp)`.
+`(case "P OR NOT P")`. This produces two subgoals, one of which has `P OR NOT P` as a consequent, and can be handled by `(smash)`.
 The other case can be split into the two required cases by using `(split)`.
 
 We use the pattern above to case split based on weather the candidate who held the majority over the entire sequence also held a
@@ -315,11 +333,35 @@ rewriting will show the required consequents, as all conditionals in the consequ
 `(assert)` suffices.
 
 If the counter was nonzero before the last vote, we use `(case)` to again case split based on weather the majority candidate was
-being tracked before the last vote. If it was,
+being tracked before the last vote. If it was, all conditionals are resolved, and we notice that direct rewrites proves the case.
+Thus, `(assert)` suffices for this subgoal.
 
+Finally, we have the case where the majority candidate was not being tracked before the last vote. In this case, we need to talk
+about the stretch for which the candidate before the last vote was tracked, which is `vz`. Then, `Maj2_Inv1` gives us an
+expression for how much this candidate leads over all others in `vz`. We then use the `Tally_2` lemma to reduce this to an 
+inequality involving the tally of the majority candidate. The `Concat_Tally` lemma after rewriting with `Maj2_Concat` then gives 
+us that the majority candidate must hold a majority in `vr`. Now, the induction hypothesis, which is quantified over all 
+`VoteSequences` of all size, combined with `Maj2_Inv0`, applied on `vr` and the vote sequence corresponding to `vs` in the 
+definition of `maj2` respectively, will produce an equality for how much the majority candidate leads over everyone else combined.
+For each of the lemmas above, we add them as antecedants with the required substitutions using `(lemma)`. In cases where the
+statement of the lemma added is further universally quantified, we remove the quantification via `(instantiate)` with the 
+mentioned substitutions. In case the statement of the lemma simplifies to an equality of functions, we use `(decompose-equality)`
+with proper substitutions to reduce to an expression for a particular point in the function's range. Now, we introduce the lemma
+`Concat_size` to add an equality required to relate the `size` expressions for `vr` and `vz`. We simplify the `concat` in this 
+by rewriting using `Maj2_Concat` via `(rewrite)`. Now, using `(assert)` is sufficient to automatically simplify the arithmatic
+expressions produced in the antecedant and complete the proof.
 
+#### Q.E.D.
 
-In the case the majority was not held before the last vote by the candidate holding the majority after the last vote, again, based
-on the `IF` conditions, there are several cases. Firstly, if the candidate being tracked before the last vote is the same as the
-candidate who got a majority,
+Finally, we can prove our correctness theorem. This can be proved by firstly removing all quantifications and implications via
+`(skosimp*)`. Then, we rewrite using the definition of `majority`, and then rewrite using `Maj_Maj2_Equiv` to reduce the problem
+in terms of `maj2`. Now, we use `(lemma)` to instanciate a version of the lemma `Maj2_Inv2` with `v` and `c` substituted as `v`
+and `c`, while we substitute `N` as `size(v)`. Then, automatically rewriting using `(assert)` will complete the proof.
+
+## Problem C.2:
+
+For all lemmas and theorems other than `Maj2_Inv2`, the proof is saved as the PVS default `<formula_name>-1` where `<formula_name>`
+represents the name of the lemma or theorem. The proof of `Maj2_Inv2` is saved as `Maj2_Inv2-2`. Please ignore the incomplete
+proof saved as `Maj2_Inv2-1`, if it exists.
+
 

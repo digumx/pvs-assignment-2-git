@@ -1,17 +1,26 @@
 majority : THEORY
 BEGIN
 
+% Basic types 
   Candidate: TYPE = {A, B, C, D, E}
   Tally: TYPE = ARRAY[Candidate -> nat]
 
-  tally_plus(t1: Tally, t2: Tally): Tally = LAMBDA (c: Candidate): t1(c) + t2(c)
 
+% Basic operations involving above types
+  tally_null: Tally                      = LAMBDA (c: Candidate): 0
+  tally_cand(cd: Candidate): Tally       = LAMBDA (c: Candidate): (IF c=cd THEN 1 ELSE 0 ENDIF)
+  tally_sum(t1: Tally, t2: Tally): Tally = LAMBDA (c: Candidate): t1(c) + t2(c)
+
+
+% The vote sequence type
   VoteSequence: DATATYPE
   BEGIN
     Null: Null?
     Vote(c: Candidate, v: VoteSequence): Vote?
   END VoteSequence
 
+
+% Basic operations on VoteSequence
   size(v: VoteSequence): RECURSIVE nat =
     (CASES v OF
        Null:        0,
@@ -26,14 +35,14 @@ BEGIN
      ENDCASES)
   MEASURE v2 BY <<
 
-  Size_0_Null: LEMMA FORALL(v: VoteSequence): size(v) = 0 IMPLIES v = Null
 
+% Basic properties of VoteSequence
+  Size_0_Null: LEMMA FORALL(v: VoteSequence): size(v) = 0 IMPLIES v = Null
+  
   Concat_Size: LEMMA FORALL(v1: VoteSequence): FORALL (v2: VoteSequence): size(concat(v1, v2)) = size(v1) + size(v2)
 
-  tally_null: Tally                      = LAMBDA (c: Candidate): 0
-  tally_cand(cd: Candidate): Tally       = LAMBDA (c: Candidate): (IF c=cd THEN 1 ELSE 0 ENDIF)
-  tally_sum(t1: Tally, t2: Tally): Tally = LAMBDA (c: Candidate): t1(c) + t2(c)
-
+  
+% The function to tally votes
   tally_votes(v: VoteSequence): RECURSIVE Tally =
     (CASES v OF
        Null:        tally_null,
@@ -41,8 +50,14 @@ BEGIN
      ENDCASES)
   MEASURE v BY <<
 
+
+% Basic properties involving VoteSequence and Tally.
   Concat_Tally: LEMMA FORALL(v1: VoteSequence): FORALL(v2: VoteSequence): tally_votes(concat(v1, v2)) = tally_sum(tally_votes(v1), tally_votes(v2))
 
+  Tally_2: LEMMA FORALL (c1: Candidate, c2: Candidate): FORALL (v: VoteSequence): (c1 /= c2 IMPLIES tally_votes(v)(c1) + tally_votes(v)(c2) <= size(v))
+
+
+% Definition of majority function
   State: DATATYPE BEGIN State(c: Candidate, n: nat): State? END State
 
   maj(v: VoteSequence): RECURSIVE State =
@@ -58,6 +73,8 @@ BEGIN
 
   majority(v: VoteSequence): Candidate = c(maj(v))
 
+
+% Extended clone of majority function with extra tracked states. These are used to express invariants.
   State2: DATATYPE BEGIN State2(c2: Candidate, n2: nat, vz: VoteSequence, vr: VoteSequence): State2? END State2
 
   maj2(v: VoteSequence): RECURSIVE State2 =
@@ -74,19 +91,26 @@ BEGIN
      ENDCASES)
   MEASURE v BY <<
 
+
+% Basic properties of the extended majority function
   Maj_Maj2_Equiv: LEMMA FORALL (v: VoteSequence): c2(maj2(v)) = c(maj(v)) AND n2(maj2(v)) = n(maj(v))
 
   Maj2_Concat: LEMMA FORALL (v: VoteSequence): v = concat(vr(maj2(v)), vz(maj2(v)))
 
   Maj2_0_Vz_Null: LEMMA FORALL (v: VoteSequence): n2(maj2(v)) = 0 IMPLIES vz(maj2(v)) = Null
 
+
+% The invariants
+  Maj2_Inv0: LEMMA FORALL (v: VoteSequence): n2(maj2(vr(maj2(v)))) = 0
+
   Maj2_Inv1: LEMMA FORALL (v: VoteSequence): (2*tally_votes(vsz)(cdt) - size(vsz) = n2(maj2(v))) WHERE vsz = vz(maj2(v)), cdt = c2(maj2(v))
 
   Maj2_Inv2: LEMMA FORALL (c: Candidate): FORALL (N: nat): FORALL (v: VoteSequence):
-               size(v) <= N IMPLIES 2*tally_votes(v)(c) > size(v)  IMPLIES (c2(maj2(v)) = c AND n2(maj2(v)) = 2*tally_votes(v)(c) - size(v))
+               size(v) <= N IMPLIES 2*tally_votes(v)(c) > size(v) IMPLIES (c2(maj2(v)) = c AND n2(maj2(v)) >= 2*tally_votes(v)(c) - size(v))
 
-  Majority_Correct: THEOREM FORALL (c: Candidate): FORALL (v :
-  VoteSequence): 2*tally_votes(v)(c) > size(v) IMPLIES majority(v)=c
+
+% The majority function is correct
+  Majority_Correct: THEOREM FORALL (c: Candidate): FORALL (v :VoteSequence): 2*tally_votes(v)(c) > size(v) IMPLIES majority(v)=c
  
 
 END majority
