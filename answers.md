@@ -280,4 +280,46 @@ cases should handle these cases automatically.
 Now we wish to prove our correctness theorem by strong induction over the size of `VoteSequence`. To do this, we define the lemma
 `Maj2_Inv` which says that for all natural number `N`, and for all `v: VoteSequence` of size at most `N`, and for all `c: Candidate`,
 if `c` holds a majority in `v`, we must have that `c2(maj2(v)) = c`. Then, proving this formula by induction on `N` is essencially
-performing strong induction on the size of 
+performing strong induction on the size of the `VoteSequence`. We also add the condition that the counter gives us the number of
+votes by which the candidate leads over all the rest combined, this will be useful as an invariant condidtion.
+
+To prove the lemma, we use `(skolem!)` to remove the outermost quantification, and then initiate induction with `(induct N)`. The 
+base case is when `N` is 0 or lesser, and simplifying with `(skosimp*)`, rewriting with `Size_0_Null` using `(rewrite)` followed 
+by using `(assert)` leads to a contradiction as for `Null`, majority of any candidate cannot hold.
+
+For the inductive case, we have that for any `N`, an implication between two formulae quantified over all `v: VoteSequence` must 
+hold. We use `(skolem!)` and `(flatten)` to simplify the sequent to a form where one of these formulae is the antecedent, and the 
+other is the consequent. These formulas themeslves will be of the form `size(v) < N IMPLIES ...`, and `size(v) < N+1 IMPLIES ...`.
+We again apply induction, this time on `v`. The base case is proved by rewriting directly using `(assert)`.For the inductive case, 
+`(skosimp*)` lands us in the required sequent for our desired strong induction.
+
+We define a general pattern for case splitting manually using `(case)`. If we want to case split based on if some `P` holds, then
+`(case P)` will produce a subgoal where we will have to prove `P` holds from the antecedents. To avoid this, we instead use
+`(case "P OR NOT P")`. This produces two subgoals, one of which has `P OR NOT P` as a consequent, and can be handled by `(bddsimp)`.
+The other case can be split into the two required cases by using `(split)`.
+
+We use the pattern above to case split based on weather the candidate who held the majority over the entire sequence also held a
+majority before the last vote. In the case where it did, we have several possible cases to consider, according to the `IF`s in
+the definition of `maj2` and the definitions of the tally related functions. These are based on the value of the counter before
+the last vote, and the equality between the candidate being tracked, the candidate recieving the last vote, and the candidate 
+holding the majority. However in all of these cases but one, direct rewriting produces contradiction, and in the case it doesnt,
+rewriting with the structural induction hypothesis in the antecedent completes the proof. Thus, `(smash)` proves this subgoal.
+
+In the case the majority was not held before the last vote, we again use `(case)` to split into cases based on weather the last
+vote went to the candidate holding the majority. In the case it did not, we can arrive at a contradiction directly by rewriting
+using `(assert)`, as all necessary conditionals are resolved. Thus, we have that the last vote went to the candidate holding
+the majority.
+
+Now, we case split using `(case)` again, this time based on if the counter was 0 before the last vote. If it was, directly 
+rewriting will show the required consequents, as all conditionals in the consequent are fully resolved. So, in this subgoal, an
+`(assert)` suffices.
+
+If the counter was nonzero before the last vote, we use `(case)` to again case split based on weather the majority candidate was
+being tracked before the last vote. If it was,
+
+
+
+In the case the majority was not held before the last vote by the candidate holding the majority after the last vote, again, based
+on the `IF` conditions, there are several cases. Firstly, if the candidate being tracked before the last vote is the same as the
+candidate who got a majority,
+
