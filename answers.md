@@ -364,4 +364,5 @@ For all lemmas and theorems other than `Maj2_Inv2`, the proof is saved as the PV
 represents the name of the lemma or theorem. The proof of `Maj2_Inv2` is saved as `Maj2_Inv2-2`. Please ignore the incomplete
 proof saved as `Maj2_Inv2-1`, if it exists.
 
-
+All TCCs have been proved and the proofs have been saved as the PVS default `<tcc_name>-1` where `<tcc_name>` represents the name
+of the TCC.
