@@ -1,0 +1,74 @@
+balls : THEORY
+BEGIN
+
+% The black and white balls problem is as follows:
+% From a bag containing certain number of black and white balls, we repeatedly do the following untill there is only one ball left:
+% Pick two balls, and if they are of the same color, add a white ball, else add a black ball to the bag.
+% The problem asks us to show that if the number of black balls was initially even, the bag will have a white ball left, else the bag will have a black ball left at the end.
+
+
+
+  %
+  % Basic datatypes
+  %
+  Ball: TYPE = {B, W}
+  Bag: TYPE = {p: [nat, nat] | p`1 + p`2 >= 1}
+
+
+
+  %
+  % Basic functions on above types
+  %
+  size(b: Bag): nat = b`1 + b`2
+  
+  add_b(b: Bag): Bag = (b`1 + 1, b`2)
+  add_w(b: Bag): Bag = (b`1, b`2 + 1)
+
+  remove_b(bg: {b: Bag | b`1 > 0}): Bag = (bg`1 - 1, bg`2)
+  remove_w(bg: {b: Bag | b`2 > 0}): Bag = (bg`1, bg`2 - 1)
+
+  even_black?(b:Bag): bool = even?(b`1)
+
+
+
+  %
+  % Recursive implementation of ball game
+  %
+  pick_2(bg: {b: Bag | size(b) >= 2}): [Ball, Ball] =
+    epsilon({t: [Ball, Ball] |
+                (IF    t = (B, B) THEN bg`1 >= 2
+		 ELSIF t = (B, W) THEN bg`1 >= 1 AND bg`2 >= 1
+		 ELSIF t = (W, B) THEN bg`1 >= 1 AND bg`2 >= 1
+		 ELSE                  bg`2 >= 2
+		 ENDIF)})
+
+  ball_step(bg: {b: Bag | size(b) >= 2}): Bag = (IF    p2 = (B, B) THEN add_w(remove_b(remove_b(bg)))
+			                         ELSIF p2 = (B, W) THEN add_b(remove_b(remove_w(bg)))
+			                         ELSIF p2 = (W, B) THEN add_b(remove_w(remove_b(bg)))
+			                         ELSE                   add_w(remove_w(remove_w(bg)))
+			                         ENDIF) WHERE p2 = pick_2(bg)
+
+  ball_game(bg: Bag): RECURSIVE Ball = (IF size(bg) = 1 
+                                           THEN (IF bg = (1, 0) THEN B ELSE W ENDIF)
+					   ELSE ball_game(ball_step(bg))
+					ENDIF)
+  MEASURE size(bg)
+
+
+
+  %
+  % Intermediate to prove the final theorem
+  %
+  Ball_Step_Reduce: LEMMA FORALL (bg: Bag): size(bg) > size(ball_step(bg))
+  Even_Black_Inv: LEMMA FORALL (bg: Bag): even_black?(bg) IFF even_black?(ball_step(bg))
+
+
+
+
+  %
+  % The theorem giving the ball left at the end of the game based on the number of black and white balls initially:
+  %
+  Last_Ball: THEOREM FORALL (bg: Bag): IF even_black?(bg) THEN ball_game(bg) = W ELSE ball_game(bg) = B ENDIF
+
+END balls
+

@@ -366,3 +366,102 @@ proof saved as `Maj2_Inv2-1`, if it exists.
 
 All TCCs have been proved and the proofs have been saved as the PVS default `<tcc_name>-1` where `<tcc_name>` represents the name
 of the TCC.
+
+## Problem C.3:
+### Part a:
+
+We firstly define `Ball` as a type that may iether by `B` for a black ball, or `W` for a white ball. We define our representation
+of bag in the type `Bag`, which is a tuple of natural numbers. The first member counts the number of black balls, and the second
+counts the number of white balls in the bag. We also define some basic properties of `Bag`, like it's `size` as the sum of the
+individual counts. The functions `add_b` and `add_w` add a black and a white ball to a given bag, respectively. Similarly, we
+define `remove_b` and `remove_w` to remove a black and white ball from a bag with atleast one black and white ball, respectively.
+`even_black?` returns weather the given `Bag` has an even number of black balls. We require a `Bag` to have atleast one ball,
+as otherwise no iterative definition of the ball game would make sense.
+
+Now we define the nondeterministic `pick_2` function, which returns a tuple of type `[Ball, Ball]` from a given `Bag` of size 
+atleast 2, representing a possible pair of balls that may be picked from the bag. Since `pick2` is nondeterministic, we must 
+define the return value as an arbitrary member of a set of allowed return values, and we achieve this by using the prelude theories 
+`set` and `epsilon` in our specification. This means that we must define for a given input bag `bg` the possible allowed ball-ball 
+tuples the function can return as a predicate on all possible ball-ball tuples. We define this predicate as the check that for the
+given ball-ball tuple, the required number of balls is present in `bg`. Note that to be able to reduce the `epsilon` in the 
+definition, the only tool at our disposal is `epsilon_ax`, which can only be applied on nonempty predicates, as the arbitrary 
+choice function represented by `epsilon` does not make sense for empty predicates. To ensure nonemptyness, we restrict the type of
+`Bag` to those with atleast two elements. This will give us enough antecedants to reduce `epsilon`, and produce tccs which oblige
+us to prove these antecedants.
+
+Next we define the function `ball_step`, which takes a `Bag` with atleast 2 elements and returns a `Bag` after performing a single
+step of the ball game on it. We use the `pick_2` function to pick two balls here.
+
+Now we can implement the iterative ball game as the recursive function `ball_game`. In this function, we check if the given bag
+has size 1, then we return the last ball in the bag, else we recursively call the function on the bag after performing a `ball_step`
+on it.
+
+### Part b:
+
+The lemma we would like to prove says that the final ball in the bag after `ball_game` terminates is white if there was an even
+number of black balls initially, else it is black. This is straight forward to express using our given definitions, as for any
+`Bag`, `even_black?` checks weather the number of black balls is even, and `ball_game` returns the last ball in the bag after
+the termination of the game. Thus the required property is captured as the following theorem:
+
+```
+Last_Ball: THEOREM FORALL (bg: Bag): IF even_black?(bg) THEN ball_game(bg) = W ELSE ball_game(bg) = B ENDIF
+```
+
+We note that the `pick_2` function is defined nondeterministically as an arbitrary member of a set using the `epsilon` function
+defined in the prelude, and all other functions including `ball_game` are defined in terms of it. Thus, it is not possible in
+general to rewrite `ball_game` directly to a concrete return value, as there is no way to rewrite the return value of `epsilon`
+to a concrete member of the return type. However, the above theorem states that nonetheless, if we know the initial parity of
+black balls in the bag, we can rewrite the return value of `ball_game` to a concrete member of the type `Ball`.
+
+### Part c:
+
+Firstly, we prove that no matter what the nondeterministic function `ball_step` does, it does indeed reduce the size of the `Bag`.
+This will be necessary for using measure induction on the size of the `Bag`. This can be proved by rewriting `ball_step`, and
+using `(smash)` to automatically case split and rewrite to prove each case.
+
+To prove the required theorem we first prove that `even_black?` is an invariant for the iteration in the ball game. As each step
+of the ball game is given by transforming the `Bag` according to `ball_step`, the invariant must have same values for the input
+and output of `ball_step`. We express this in a lemma `Even_Black_Inv`.
+
+To prove the lemma, we first remove the outermost quantification with `(skolem!)`, and then `(rewrite ball_step)`, introducing the 
+`IF` expression in the definition. We notice that regardless of the complex condition involving the nondeterministic `pick_2` 
+condition, replacing the `IF` condition with any of the branches can directly prove the required equivalence by simple rewrites. 
+Thus, we use `(smash)` to automatically case split and perform the rewrites. As the `even?` fucntion is defined in the prelude as
+an existencial expression, `(smash)` fails to prove the equivalence of `even?(n)` and `even?(n + 2)`, which we do manually using
+skolemization and appropriate instanciation via `(skosimp*)` and `(inst)`.
+
+Now we prove our theorem by strong induction using `size` as a measure function. To do so, we install rewrites with 
+`(auto-rewrite-defs)` and initiate induction with `(measure-induct)`. Then, using `P(b: Bag)` to represent our predicate, we have
+a consequent of the form `P(bg)` and an antecedent of the form `FORALL (b: Bag) size(b) < size(bg) IMPlIES P(b)`. The predicate
+itself is an `IF` expression, and expanding the definition of `ball_game` gives us another nested `IF` expression, this time based
+on weather we are in the base case or recursive case for `ball_game`. We case split on these `IF`'s conditions and automatically
+simplify with `(smash)`.
+
+First we have the case where the outer `IF`'s condition is true, that is, the bag `bg` has an even number of black balls. Then,
+for the base case of `ball_game`, direct rewriting completes the proof, and `(smash)` automatically discharges this case. For
+the recursive case, we use `Ball_Step_Reduce` to argue that the size of `ball_step(bg)` is less than the size of `bg`, allowing
+us to apply the induction hypothesis. Then, `Even_Black_Inv` gives us that the number of black balls in `ball_step(bg)` is even,
+and appying the induction hypothesis completes the proof. To do this, we introduce the relevant lemmas with proper substitution
+using `(lemma)`, reduce the `IFF` to implications with `(flatten)`, and instantiate the induction hypothesis for `ball_step(bg)`
+with `(inst)`. Then, performing automatic case splits and rewriting with `(smash)` completes the proof of this case.
+
+Now, we come to the case where the bag `bg` has an odd number of black balls. For the base case, as size is 1, we have two 
+possibilities for the bag `bg`, `(1, 0)` or `(0, 1)`. One of these is what we need to show, and for the other, we have a 
+contradiction with the condition that `bg` has an odd number of balls. To follow this arguement in PVS, we introduce the two cases 
+for `Bag` using `(case)`, as we have done previously in the majority problem. One case is immediately discharged, and for the 
+other case, we arrive at a contradiction by instanciating the existential evenness condition with 0 as the quotient when the 
+number of black balls is divided by 2. To discharge the remaining subgoal `bg = (1, 0) OR bg = (0, 1)`, we use `(flatten)` to 
+remove the outer `OR` and then use `(decompose-equality)` to reduce the consequent expressions to purely arithmatic forms. Then, 
+`(assert)` suffices.
+
+Finally, for the recursive case where the bag `bg` has an odd number of black balls, we use `Ball_Step_Reduce` to argue that we 
+can apply the induction hypothesis in `ball_step(bg)`, and use `Even_Black_Inv` to argue that the number of black balls in 
+`ball_step(bg)` is odd. Then, applying the induction hypothesis, we complete the prove. To do this in PVS, we introduce instances 
+of each lemma used with proper substitution using `(lemma)`, reduce `IFF` to implications using `(flatten)`, and instantiate the 
+induction hypothesis with `ball_step(bg)` with `(inst)`. Then, using `(smash)` to automatically case split and rewrite completes 
+the proof.
+
+## Problem E.2:
+
+For all lemmas and theories, the proof is saved as the PVS default `<formula_name>-1`, where `<formula_name>` represents the name 
+given to the theory.
