@@ -1,245 +1,44 @@
 (opsemwithstates
  (s0_TCC1 0
-  (s0_TCC1-1 nil 3794761553
-   ("" (instantiate 1 "LAMBDA v: 0") (("" (propax) nil nil)) nil)
-   ((istatet type-eq-decl nil opsemwithstates nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
-    (statet type-eq-decl nil opsemwithstates nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (>= const-decl "bool" reals nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (number nonempty-type-decl nil numbers nil)
-    (vars type-decl nil opsemwithstates nil))
-   nil (s0 existence "" "istatet")))
- (init_state 0
-  (init_state-1 nil 3794830543
-   ("" (auto-rewrite-theory opsemwithstates)
-    (("" (skosimp*)
-      (("" (typepred "s0") (("" (rewrite -1 *) nil nil)) nil)) nil))
-    nil)
-   ((boolean nonempty-type-decl nil booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (vars type-decl nil opsemwithstates nil)
-    (number nonempty-type-decl nil numbers nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (>= const-decl "bool" reals nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (statet type-eq-decl nil opsemwithstates nil)
-    (istatet type-eq-decl nil opsemwithstates nil)
-    (s0 const-decl "istatet" opsemwithstates nil))
-   shostak))
- (test0 0 (test0-1 nil 3794828777 ("" (assert) nil nil) nil shostak))
- (test1 0
-  (test1-1 nil 3794828819
-   ("" (auto-rewrite-theory opsemwithstates) (("" (assert) nil nil))
-    nil)
-   ((init_state formula-decl nil opsemwithstates nil)) shostak))
- (test2 0
-  (test2-1 nil 3794829090
-   ("" (auto-rewrite-theory opsemwithstates) (("" (assert) nil nil))
-    nil)
-   ((init_state formula-decl nil opsemwithstates nil)) shostak))
- (test3 0
-  (test3-1 nil 3794829120
-   ("" (extensionality statet) (("" (assert) nil nil)) nil)
-   ((vars type-decl nil opsemwithstates nil)
-    (number nonempty-type-decl nil numbers nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (>= const-decl "bool" reals nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (statet type-eq-decl nil opsemwithstates nil))
-   shostak))
+  (s0_TCC1-1 nil 3795542641 ("" (existence-tcc) nil nil) nil nil))
  (Minus_TCC1 0
-  (Minus_TCC1-1 nil 3794761553
-   ("" (skosimp*) (("" (assert) nil nil)) nil)
-   ((real_lt_is_strict_total_order name-judgement
-     "(strict_total_order?[real])" real_props nil)
-    (real_ge_is_total_order name-judgement "(total_order?[real])"
-     real_props nil)
-    (int_minus_int_is_int application-judgement "int" integers nil))
-   nil
-   (Minus subtype
-    "(number_fields.-)(opsemwithstates.a, opsemwithstates.b)" "nat")))
+  (Minus_TCC1-1 nil 3795542641 ("" (subtype-tcc) nil nil) nil nil))
  (aeval_TCC1 0
-  (aeval_TCC1-1 nil 3794761553
-   ("" (auto-rewrite-defs)
-    (("" (skosimp*) (("" (rewrite -1 *) (("" (assert) nil nil)) nil))
-      nil))
-    nil)
-   ((<< adt-def-decl "(strict_well_founded?[aexpt])" opsemwithstates
-     nil))
-   nil
-   (aeval termination
-    "opsemwithstates.aeval(opsemwithstates.st, opsemwithstates.l)"
-    "nil")))
+  (aeval_TCC1-1 nil 3795542641 ("" (termination-tcc) nil nil) nil nil))
  (aeval_TCC2 0
-  (aeval_TCC2-1 nil 3794761553
-   ("" (auto-rewrite-defs)
-    (("" (skosimp*) (("" (rewrite -1 *) (("" (assert) nil nil)) nil))
-      nil))
-    nil)
-   ((<< adt-def-decl "(strict_well_founded?[aexpt])" opsemwithstates
-     nil))
-   nil
-   (aeval termination
-    "opsemwithstates.aeval(opsemwithstates.st, opsemwithstates.r)"
-    "nil")))
+  (aeval_TCC2-1 nil 3795542641 ("" (termination-tcc) nil nil) nil nil))
  (aeval_TCC3 0
-  (aeval_TCC3-1 nil 3794761553
-   ("" (auto-rewrite-defs)
-    (("" (skosimp*) (("" (rewrite -1 *) (("" (assert) nil nil)) nil))
-      nil))
-    nil)
-   ((<< adt-def-decl "(strict_well_founded?[aexpt])" opsemwithstates
-     nil))
-   nil
-   (aeval termination
-    "opsemwithstates.aeval(opsemwithstates.st, opsemwithstates.l)"
-    "nil")))
+  (aeval_TCC3-1 nil 3795542641 ("" (termination-tcc) nil nil) nil nil))
  (aeval_TCC4 0
-  (aeval_TCC4-1 nil 3794761553
-   ("" (auto-rewrite-defs)
-    (("" (skosimp*) (("" (rewrite -1 *) (("" (assert) nil nil)) nil))
-      nil))
-    nil)
-   ((<< adt-def-decl "(strict_well_founded?[aexpt])" opsemwithstates
-     nil))
-   nil
-   (aeval termination
-    "opsemwithstates.aeval(opsemwithstates.st, opsemwithstates.r)"
-    "nil")))
+  (aeval_TCC4-1 nil 3795542641 ("" (termination-tcc) nil nil) nil nil))
  (aeval_TCC5 0
-  (aeval_TCC5-1 nil 3794761553
-   ("" (auto-rewrite-defs)
-    (("" (skosimp*) (("" (rewrite -1 *) (("" (assert) nil nil)) nil))
-      nil))
-    nil)
-   ((<< adt-def-decl "(strict_well_founded?[aexpt])" opsemwithstates
-     nil))
-   nil
-   (aeval termination
-    "opsemwithstates.aeval(opsemwithstates.st, opsemwithstates.l)"
-    "nil")))
+  (aeval_TCC5-1 nil 3795542641 ("" (termination-tcc) nil nil) nil nil))
  (aeval_TCC6 0
-  (aeval_TCC6-1 nil 3794761553
-   ("" (auto-rewrite-defs)
-    (("" (skosimp*) (("" (rewrite -1 *) (("" (assert) nil nil)) nil))
-      nil))
-    nil)
-   ((<< adt-def-decl "(strict_well_founded?[aexpt])" opsemwithstates
-     nil))
-   nil
-   (aeval termination
-    "opsemwithstates.aeval(opsemwithstates.st, opsemwithstates.r)"
-    "nil")))
- (aexpexec 0
-  (aexpexec-1 nil 3794896285
-   ("" (auto-rewrite-defs)
-    (("" (skosimp*) (("" (assert) (("" (postpone) nil nil)) nil)) nil))
-    nil)
-   nil shostak))
+  (aeval_TCC6-1 nil 3795542641 ("" (termination-tcc) nil nil) nil nil))
  (beval_TCC1 0
-  (beval_TCC1-1 nil 3794761553
-   ("" (auto-rewrite-defs)
-    (("" (skosimp*) (("" (rewrite -1 *) (("" (assert) nil nil)) nil))
-      nil))
-    nil)
-   ((<< adt-def-decl "(strict_well_founded?[bexpt])" opsemwithstates
-     nil))
-   nil
-   (beval termination
-    "opsemwithstates.beval(opsemwithstates.st, opsemwithstates.exp)"
-    "nil")))
+  (beval_TCC1-1 nil 3795542641 ("" (termination-tcc) nil nil) nil nil))
  (beval_TCC2 0
-  (beval_TCC2-1 nil 3794761553
-   ("" (auto-rewrite-defs)
-    (("" (skosimp*) (("" (rewrite -1 *) (("" (assert) nil nil)) nil))
-      nil))
-    nil)
-   ((<< adt-def-decl "(strict_well_founded?[bexpt])" opsemwithstates
-     nil))
-   nil
-   (beval termination
-    "opsemwithstates.beval(opsemwithstates.st, opsemwithstates.l)"
-    "nil")))
+  (beval_TCC2-1 nil 3795542641 ("" (termination-tcc) nil nil) nil nil))
  (beval_TCC3 0
-  (beval_TCC3-1 nil 3794761553
-   ("" (auto-rewrite-defs)
-    (("" (skosimp*) (("" (rewrite -2 *) (("" (assert) nil nil)) nil))
-      nil))
-    nil)
-   ((<< adt-def-decl "(strict_well_founded?[bexpt])" opsemwithstates
-     nil))
-   nil
-   (beval termination
-    "opsemwithstates.beval(opsemwithstates.st, opsemwithstates.r)"
-    "nil")))
+  (beval_TCC3-1 nil 3795542641 ("" (termination-tcc) nil nil) nil nil))
  (beval_TCC4 0
-  (beval_TCC4-1 nil 3794761553
-   ("" (auto-rewrite-defs)
-    (("" (skosimp*) (("" (rewrite -1 *) (("" (assert) nil nil)) nil))
-      nil))
-    nil)
-   ((<< adt-def-decl "(strict_well_founded?[bexpt])" opsemwithstates
-     nil))
-   nil
-   (beval termination
-    "opsemwithstates.beval(opsemwithstates.st, opsemwithstates.l)"
-    "nil")))
+  (beval_TCC4-1 nil 3795542641 ("" (termination-tcc) nil nil) nil nil))
  (beval_TCC5 0
-  (beval_TCC5-1 nil 3794761553
-   ("" (auto-rewrite-defs)
-    (("" (skosimp*) (("" (rewrite -2 *) (("" (assert) nil nil)) nil))
-      nil))
-    nil)
-   ((<< adt-def-decl "(strict_well_founded?[bexpt])" opsemwithstates
-     nil))
-   nil
-   (beval termination
-    "opsemwithstates.beval(opsemwithstates.st, opsemwithstates.r)"
-    "nil")))
+  (beval_TCC5-1 nil 3795542641 ("" (termination-tcc) nil nil) nil nil))
  (Evalaexp1 0
-  (Evalaexp1-1 nil 3794839720
+  (Evalaexp1-1 nil 3795542642
    ("" (auto-rewrite-theory opsemwithstates)
     (("" (skosimp*) (("" (assert) nil nil)) nil)) nil)
    ((aeval def-decl "nat" opsemwithstates nil)
+    (mult_divides2 application-judgement "(divides(m))" divides nil)
+    (mult_divides1 application-judgement "(divides(n))" divides nil)
     (nnint_times_nnint_is_nnint application-judgement "nonneg_int"
      integers nil)
     (nnint_plus_nnint_is_nnint application-judgement "nonneg_int"
      integers nil))
    shostak))
  (Evalbexp1 0
-  (Evalbexp1-1 nil 3794839772
+  (Evalbexp1-1 nil 3795542689
    ("" (auto-rewrite-theory opsemwithstates)
     (("" (skosimp*) (("" (assert) nil nil)) nil)) nil)
    ((real_lt_is_strict_total_order name-judgement
@@ -248,7 +47,7 @@
     (beval def-decl "bool" opsemwithstates nil))
    shostak))
  (Minus_0 0
-  (Minus_0-1 nil 3794896338
+  (Minus_0-1 nil 3795542770
    ("" (auto-rewrite-defs)
     (("" (skosimp*) (("" (assert) nil nil)) nil)) nil)
    ((real_le_is_total_order name-judgement "(total_order?[real])"
@@ -256,12 +55,13 @@
     (Minus const-decl "nat" opsemwithstates nil))
    shostak))
  (Minus_from_0 0
-  (Minus_from_0-1 nil 3794896379
-   ("" (auto-rewrite-defs)
-    (("" (skosimp*)
-      (("" (rewrite "Minus" 1) (("" (smash) nil nil)) nil)) nil))
+  (Minus_from_0-1 nil 3795542798
+   ("" (auto-rewrite-theory opsemwithstates)
+    (("" (skosimp*) (("" (rewrite Minus 1) (("" (smash) nil nil)) nil))
+      nil))
     nil)
-   ((real_le_is_total_order name-judgement "(total_order?[real])"
+   ((int_minus_int_is_int application-judgement "int" integers nil)
+    (real_le_is_total_order name-judgement "(total_order?[real])"
      real_props nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (>= const-decl "bool" reals nil)
@@ -280,7 +80,7 @@
     (Minus const-decl "nat" opsemwithstates nil))
    shostak))
  (Opt_sound 0
-  (Opt_sound-1 nil 3794839797
+  (Opt_sound-1 nil 3795543462
    ("" (auto-rewrite-theory opsemwithstates)
     (("" (skolem! 1)
       (("" (induct "a")
@@ -304,34 +104,36 @@
         nil))
       nil))
     nil)
-   ((aexpt type-decl nil opsemwithstates nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (number nonempty-type-decl nil numbers nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
-    (vars type-decl nil opsemwithstates nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
-    (number_field nonempty-type-from-decl nil number_fields nil)
-    (real_pred const-decl "[number_field -> boolean]" reals nil)
-    (real nonempty-type-from-decl nil reals nil)
-    (rational_pred const-decl "[real -> boolean]" rationals nil)
-    (rational nonempty-type-from-decl nil rationals nil)
-    (integer_pred const-decl "[rational -> boolean]" integers nil)
-    (int nonempty-type-eq-decl nil integers nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (>= const-decl "bool" reals nil)
-    (nat nonempty-type-eq-decl nil naturalnumbers nil)
-    (statet type-eq-decl nil opsemwithstates nil)
-    (aeval def-decl "nat" opsemwithstates nil)
-    (Opt def-decl "aexpt" opsemwithstates nil)
-    (aexpt_induction formula-decl nil opsemwithstates nil)
-    (nnint_plus_nnint_is_nnint application-judgement "nonneg_int"
+   ((nnint_times_nnint_is_nnint application-judgement "nonneg_int"
      integers nil)
+    (mult_divides1 application-judgement "(divides(n))" divides nil)
+    (mult_divides2 application-judgement "(divides(m))" divides nil)
+    (Minus_from_0 formula-decl nil opsemwithstates nil)
+    (Minus const-decl "nat" opsemwithstates nil)
     (real_le_is_total_order name-judgement "(total_order?[real])"
      real_props nil)
-    (Minus const-decl "nat" opsemwithstates nil)
-    (Minus_from_0 formula-decl nil opsemwithstates nil)
-    (nnint_times_nnint_is_nnint application-judgement "nonneg_int"
-     integers nil))
+    (nnint_plus_nnint_is_nnint application-judgement "nonneg_int"
+     integers nil)
+    (aexpt_induction formula-decl nil opsemwithstates nil)
+    (Opt def-decl "aexpt" opsemwithstates nil)
+    (aeval def-decl "nat" opsemwithstates nil)
+    (statet type-eq-decl nil opsemwithstates nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (>= const-decl "bool" reals nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields
+     nil)
+    (vars type-decl nil opsemwithstates nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (number nonempty-type-decl nil numbers nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (aexpt type-decl nil opsemwithstates nil))
    shostak)))
 

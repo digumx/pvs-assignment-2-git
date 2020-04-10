@@ -1,11 +1,16 @@
 (sum_plus
  (sum_TCC1 0
-  (sum_TCC1-1 nil 3795539780 ("" (subtype-tcc) nil nil) nil nil))
+  (sum_TCC1-1 nil 3794305208 ("" (subtype-tcc) nil nil) nil nil
+   (sum subtype "(number_fields.-)(sum_plus.n, 1)" "nat")))
  (sum_TCC2 0
-  (sum_TCC2-1 nil 3795539780 ("" (termination-tcc) nil nil) nil nil))
+  (sum_TCC2-1 nil 3794305208 ("" (termination-tcc) nil nil) nil nil
+   (sum termination
+    "sum_plus.sum(sum_plus.f, (number_fields.-)(sum_plus.n, 1))"
+    "nil")))
  (sum_of_squares 0
   (sum_of_squares_auto_theory
-   "Replacing as directed in A.1.c actually worked for me." 3795540259
+   "Replacing as directed in A.1.c actually works directly for me."
+   3794306767
    ("" (auto-rewrite-theory "sum_plus")
     (("" (induct n)
       (("1" (assert) nil nil)
@@ -14,7 +19,7 @@
       nil))
     nil)
    nil shostak)
-  (sum_of_squares_auto "Automated with auto rewrites" 3795540154
+  (sum_of_squares_auto "Automated with auto-rewrite-defs" 3794306414
    ("" (auto-rewrite-defs)
     (("" (induct n)
       (("1" (assert) nil nil)
@@ -46,15 +51,15 @@
     (square const-decl "nat" sum_plus nil)
     (+ const-decl "[numfield, numfield -> numfield]" number_fields nil)
     (nat_induction formula-decl nil naturalnumbers nil)
-    (nnint_times_nnint_is_nnint application-judgement "nonneg_int"
-     integers nil)
     (even_times_int_is_even application-judgement "even_int" integers
      nil)
-    (mult_divides1 application-judgement "(divides(n))" divides nil)
-    (mult_divides2 application-judgement "(divides(m))" divides nil)
+    (nnint_times_nnint_is_nnint application-judgement "nonneg_int"
+     integers nil)
     (even_plus_odd_is_odd application-judgement "odd_int" integers nil)
     (nnint_plus_nnint_is_nnint application-judgement "nonneg_int"
      integers nil)
+    (int_times_even_is_even application-judgement "even_int" integers
+     nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (int_minus_int_is_int application-judgement "int" integers nil)
@@ -63,7 +68,7 @@
     (even_plus_even_is_even application-judgement "even_int" integers
      nil))
    shostak)
-  (sum_of_squares-1 nil 3795539781
+  (sum_of_squares-1 nil 3794305209
    ("" (induct n)
     (("1" (rewrite sum)
       (("1" (rewrite sum)
@@ -105,15 +110,15 @@
     (square const-decl "nat" sum_plus nil)
     (+ const-decl "[numfield, numfield -> numfield]" number_fields nil)
     (nat_induction formula-decl nil naturalnumbers nil)
-    (nnint_times_nnint_is_nnint application-judgement "nonneg_int"
-     integers nil)
     (even_times_int_is_even application-judgement "even_int" integers
      nil)
-    (mult_divides1 application-judgement "(divides(n))" divides nil)
-    (mult_divides2 application-judgement "(divides(m))" divides nil)
+    (nnint_times_nnint_is_nnint application-judgement "nonneg_int"
+     integers nil)
     (even_plus_odd_is_odd application-judgement "odd_int" integers nil)
     (nnint_plus_nnint_is_nnint application-judgement "nonneg_int"
      integers nil)
+    (int_times_even_is_even application-judgement "even_int" integers
+     nil)
     (posint_plus_nnint_is_posint application-judgement "posint"
      integers nil)
     (int_minus_int_is_int application-judgement "int" integers nil)
