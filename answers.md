@@ -375,43 +375,47 @@ of bag in the type `Bag`, which is a tuple of natural numbers. The first member 
 counts the number of white balls in the bag. We also define some basic properties of `Bag`, like it's `size` as the sum of the
 individual counts. The functions `add_b` and `add_w` add a black and a white ball to a given bag, respectively. Similarly, we
 define `remove_b` and `remove_w` to remove a black and white ball from a bag with atleast one black and white ball, respectively.
-`even_black?` returns weather the given `Bag` has an even number of black balls. We require a `Bag` to have atleast one ball,
-as otherwise no iterative definition of the ball game would make sense.
+We restruct the domain of these functions to accept only bags from which the required ball can be removed. The function `even_black?`
+returns weather the given `Bag` has an even number of black balls. 
+
+As the ball game only makes sense as long as bags are not empty, we define a type `NonemptyBag` as a subtype of `Bag`.
 
 Now we define the nondeterministic `pick_2` function, which returns a tuple of type `[Ball, Ball]` from a given `Bag` of size 
 atleast 2, representing a possible pair of balls that may be picked from the bag. Since `pick2` is nondeterministic, we must 
 define the return value as an arbitrary member of a set of allowed return values, and we achieve this by using the prelude theories 
 `set` and `epsilon` in our specification. This means that we must define for a given input bag `bg` the possible allowed ball-ball 
 tuples the function can return as a predicate on all possible ball-ball tuples. We define this predicate as the check that for the
-given ball-ball tuple, the required number of balls is present in `bg`. Note that to be able to reduce the `epsilon` in the 
-definition, the only tool at our disposal is `epsilon_ax`, which can only be applied on nonempty predicates, as the arbitrary 
-choice function represented by `epsilon` does not make sense for empty predicates. To ensure nonemptyness, we restrict the type of
-`Bag` to those with atleast two elements. This will give us enough antecedants to reduce `epsilon`, and produce tccs which oblige
-us to prove these antecedants.
+given ball-ball tuple, the required number of balls is present in `bg`. This is defined as `pick_2_pred`. 
+
+We note that to be able to reduce the `epsilon` in the definition, the only tool at our disposal is `epsilon_ax`, which can only 
+be applied on nonempty predicates, as the arbitrary choice function represented by `epsilon` does not make sense for empty 
+predicates. To ensure nonemptyness, we restrict the domain to those bags with atleast two elements. This will give us enough 
+antecedants to apply `epsilon_ax` wherever the `pick_2` function appears, and produce tccs which oblige us to prove these 
+antecedants. This nonemptiness is stated in the lemma `Pick_2_Pred_Nonempty`.
 
 Next we define the function `ball_step`, which takes a `Bag` with atleast 2 elements and returns a `Bag` after performing a single
 step of the ball game on it. We use the `pick_2` function to pick two balls here.
 
 Now we can implement the iterative ball game as the recursive function `ball_game`. In this function, we check if the given bag
 has size 1, then we return the last ball in the bag, else we recursively call the function on the bag after performing a `ball_step`
-on it.
+on it. We require that the input bag be nonempty.
 
 ### Part b:
 
-The lemma we would like to prove says that the final ball in the bag after `ball_game` terminates is white if there was an even
+The theorem we would like to prove says that the final ball in the bag after `ball_game` terminates is white if there was an even
 number of black balls initially, else it is black. This is straight forward to express using our given definitions, as for any
 `Bag`, `even_black?` checks weather the number of black balls is even, and `ball_game` returns the last ball in the bag after
 the termination of the game. Thus the required property is captured as the following theorem:
 
 ```
-Last_Ball: THEOREM FORALL (bg: Bag): IF even_black?(bg) THEN ball_game(bg) = W ELSE ball_game(bg) = B ENDIF
+Last_Ball: THEOREM FORALL (bg: NonemptyBag): IF even_black?(bg) THEN ball_game(bg) = W ELSE ball_game(bg) = B ENDIF
 ```
 
 We note that the `pick_2` function is defined nondeterministically as an arbitrary member of a set using the `epsilon` function
 defined in the prelude, and all other functions including `ball_game` are defined in terms of it. Thus, it is not possible in
 general to rewrite `ball_game` directly to a concrete return value, as there is no way to rewrite the return value of `epsilon`
 to a concrete member of the return type. However, the above theorem states that nonetheless, if we know the initial parity of
-black balls in the bag, we can rewrite the return value of `ball_game` to a concrete member of the type `Ball`.
+black balls in the bag, we can rewrite the return value of `ball_game` to a concrete member of the type `Ball`. 
 
 ### Part c:
 
@@ -465,3 +469,20 @@ the proof.
 
 For all lemmas and theories, the proof is saved as the PVS default `<formula_name>-1`, where `<formula_name>` represents the name 
 given to the theory.
+
+To prove the subtype tccs generated by the instances of the `remove_*` functions in the definition of `ball_step`, we need to apply
+`epsilon_ax`, and for that we need to prove the lemma `Pick_2_Pred_Nonempty`. To do so, we first simplify via `(skosimp*)`, and
+introduce the type predicate for the bag via `(typepred)`. Then, we use `(case)` to case split into three cases, one where the bag
+has atleast two black balls, one where there are atleast two white balls, and one where there is exactly one black and one white
+ball. In each case, we instanciate the existential formula in the sequent via `(inst)` with `(B, B)`, `(W, W)` and `(B, W)` 
+respectively, and rewrite directly with `(assert)` to complete the proof.
+
+The tccs generated in `ball_step` for the `IF` and `ELSIF` cases are proved by simplifying with `(skosimp*)`, and introducing the
+`epsilon_ax` and `Pick_2_Pred_Nonempty` with proper substitutions via `(lemma)`. Then rewriting and using `(smash)` completes the
+proof. For the `ELSE` case, before we follow the above steps we use `(case)` to introduce `p2!1 = (W, W)` as an antecedent. Then,
+the proof for the first subgoal generated is as above. For the second subgoal, we use `(case)` to split based on weather the 
+componenets of `p2!1` are black or white, giving us 4 subgoals. For each, we use `(decompose-equality)` on the corresponding 
+succeedent formula to complete the proof.
+
+All other subtype tccs were proved by simplifying with `(skosimp*)`, introducting type predicates for `Bag` type variables, and
+automatically case splitting and simplifying with `(smash)`.
